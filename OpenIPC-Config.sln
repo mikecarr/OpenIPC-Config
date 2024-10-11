@@ -12,5 +12,6 @@ Global
 		{01548F64-6A1B-4709-B6D5-898ABBE13702}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01548F64-6A1B-4709-B6D5-898ABBE13702}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01548F64-6A1B-4709-B6D5-898ABBE13702}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01548F64-6A1B-4709-B6D5-898ABBE13702}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
