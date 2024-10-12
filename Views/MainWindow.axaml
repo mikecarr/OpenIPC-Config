@@ -3,17 +3,40 @@
         xmlns:vm="using:OpenIPC_Config.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="850"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        mc:Ignorable="d" 
         x:Class="OpenIPC_Config.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="OpenIPC_Config">
+        Title="OpenIPC Config"
+        MinWidth="100" MinHeight="200" d:ResizeMode="CanResize">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
+    
+    <!-- Add styles and resources for this window -->
+    <Window.Styles>
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+        </Style>
+        
+        <Style Selector="ComboBox">
+            <Setter Property="Padding" Value="5"></Setter>
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="5"></Setter>
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+        </Style>
+    </Window.Styles>
 
 
     <Grid>
@@ -21,16 +44,16 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <!-- <RowDefinition Height="Auto" /> -->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180*" />
+            <ColumnDefinition Width="120*" />
             <ColumnDefinition Width="5*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border Background="WhiteSmoke"
+        <Border  
                 BorderBrush="Black"
                 BorderThickness="2"
                 CornerRadius="5"
@@ -39,23 +62,22 @@
             <TabControl x:Name="MainTabControl" Grid.Row="0" Grid.ColumnSpan="2">
 
                 <TabItem Header="WFB Settings" FontSize="14">
-                    <Border Background="WhiteSmoke"
-                            BorderBrush="Black"
+                    <Border BorderBrush="Black"
                             BorderThickness="1"
                             CornerRadius="4"
                             Padding="5">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
@@ -66,7 +88,7 @@
                             <!-- 5.8GHz Frequency -->
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Select 5.8GHz Frequency" />
                             <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Frequencies58GHz}"
-                                      SelectedItem="{Binding Selected58GHzFrequency}" />
+                                      SelectedItem="{Binding Selected58GHzFrequency, Mode=TwoWay}" />
                             <!-- 5.8GHz TX Power -->
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Select 5.8GHz TX Power" />
                             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Power58GHz}"
@@ -109,7 +131,10 @@
                                       SelectedItem="{Binding SelectedFecN}" />
 
                             <!-- Restart Wfb Button -->
-                            <Button Grid.Row="9" Grid.Column="3" Click="btnRestartWFB_Click">Restart WFB</Button>
+                            <Button Grid.Row="9" Grid.Column="1" Command="{Binding SaveConfigCommand}"
+                                    IsEnabled="{Binding CanConnect}">
+                                Restart WFB
+                            </Button>
 
                         </Grid>
 
@@ -136,24 +161,13 @@
                 <TabItem Header="OSD" FontSize="14">
                     <TextBlock Margin="5">OSD</TextBlock>
                 </TabItem>
-
-                <TabItem Header="Logs" FontSize="14">
-                    <ScrollViewer x:Name="LogsScrollViewer" VerticalScrollBarVisibility="Auto">
-                        <TextBox Name="LogsTextBox" Height="500" AcceptsReturn="True" IsReadOnly="True"
-                                 TextWrapping="Wrap" MaxHeight="300" />
-                    </ScrollViewer>
-                </TabItem>
-
-                <!-- <TabItem Header="Logs"> -->
-                <!--     <ScrollViewer x:Name="LogsScrollViewer" VerticalScrollBarVisibility="Auto"> -->
-                <!--         <TextBox Name="LogsTextBox" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap" -->
-                <!--                  Height="300" Text="{Binding Logs, Mode=OneWay}" /> -->
-                <!--     </ScrollViewer> -->
-                <!-- </TabItem> -->
+                
+                
             </TabControl>
         </Border>
 
-        <Border Grid.Row="1" Background="WhiteSmoke"
+        <Border Grid.Column="0" Grid.Row="1" 
+                
                 BorderBrush="Black"
                 BorderThickness="2"
                 CornerRadius="5"
@@ -169,11 +183,11 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.Row="1"  Background="WhiteSmoke"
-                        BorderBrush="Black"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="5">
+                <!-- <Border Grid.Row="0" Background="WhiteSmoke" -->
+                <!--         BorderBrush="Black" -->
+                <!--         BorderThickness="1" -->
+                <!--         CornerRadius="4" -->
+                <!--         Padding="5"> -->
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -188,40 +202,77 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Column="0" Grid.Row="0">Username:</Label>
-                        <TextBox Grid.Column="1" Grid.Row="0"></TextBox>
+                        <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Username, Mode=TwoWay}" />
 
                         <Label Grid.Column="0" Grid.Row="1">Password:</Label>
-                        <TextBox Grid.Column="1" Grid.Row="1"></TextBox>
+                        <MaskedTextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Password, Mode=TwoWay}" />
 
                         <Label Grid.Column="0" Grid.Row="2">IP:</Label>
-                        <TextBox Grid.Column="1" Grid.Row="2"></TextBox>
-
-                        <Button Grid.Column="0" Grid.Row="3">Connect</Button>
-                        <Button Grid.Column="1" Grid.Row="3">Save/Boot</Button>
-                        <Button Grid.Column="2" Grid.Row="3">Reboot</Button>
-                    </Grid>
-                </Border>
-                
-                
-                    <Grid Grid.Column="2" HorizontalAlignment="Right">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding IpAddress, Mode=TwoWay}" />
                         
-                        <RadioButton FontSize="12" Grid.Row="0">OpenIPC Camera</RadioButton>
-                        <RadioButton FontSize="12" Grid.Row="1">NVR Hi3536</RadioButton>
-                        <RadioButton FontSize="12" Grid.Row="2">Radxa Zero 3W (WFB-ng)</RadioButton>
+                        <Button Grid.Column="0" Grid.Row="3" Content="Connect"
+                                Command="{Binding ConnectCommand}"
+                                IsEnabled="{Binding CanConnect}" />
+
+
+                        <Button Grid.Column="1" Grid.Row="3" IsEnabled="{Binding CanConnect}">Save/Boot</Button>
+                        <Button Grid.Column="2" Grid.Row="3" IsEnabled="{Binding CanConnect}">Reboot</Button>
                     </Grid>
-               
+                <!-- </Border> -->
 
 
+                <Grid Grid.Column="2" HorizontalAlignment="Right">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <RadioButton Grid.Column="0" Grid.Row="0" GroupName="DeviceType" Content="OpenIPC Camera"
+                                 IsChecked="{Binding SelectedDeviceType, Converter={StaticResource DeviceTypeConverter}, ConverterParameter='Camera'}" />
+                    <RadioButton Grid.Column="0" Grid.Row="1" GroupName="DeviceType" Content="Radxa Zero 3W (WFB-ng)"
+                                 IsChecked="{Binding SelectedDeviceType, Converter={StaticResource DeviceTypeConverter}, ConverterParameter='Radxa'}" />
+                    <RadioButton Grid.Column="0" Grid.Row="2" GroupName="DeviceType" Content="NVR Hi3536"
+                                 IsChecked="{Binding SelectedDeviceType, Converter={StaticResource DeviceTypeConverter}, ConverterParameter='NVR'}" />
+
+                </Grid>
+
+            </Grid>
+
+
+        </Border>
+
+        <Border Grid.Column="0" Grid.Row="2" 
+                
+                BorderBrush="Black"
+                BorderThickness="2"
+                CornerRadius="5"
+                Padding="5" Margin="10">
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ScrollViewer x:Name="LogsScrollViewer" 
+                              VerticalScrollBarVisibility="Visible" 
+                              HorizontalScrollBarVisibility="Visible" 
+                              VerticalAlignment="Stretch" 
+                              HorizontalAlignment="Stretch">
+                    <ListBox ItemsSource="{Binding LogMessages}" 
+                             Height="160"  
+                             Padding="2" 
+                             >
+                    </ListBox>
+                </ScrollViewer>
             </Grid>
         </Border>
     </Grid>

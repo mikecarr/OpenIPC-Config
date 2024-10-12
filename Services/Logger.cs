@@ -1,4 +1,5 @@
 using Avalonia.Threading;
+using OpenIPC_Config.ViewModels;
 
 namespace OpenIPC_Config;
 
@@ -41,30 +42,16 @@ public class Logger
     public void Log(string message)
     {
         string formattedMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
-        
+
         // Log to file
         File.AppendAllText(_logFilePath, formattedMessage + Environment.NewLine);
-        
+
         // Log to console
         Console.WriteLine(formattedMessage);
         
-        // Log to TextBox (UI)
-        AddLogToTextBox(formattedMessage);
+        // Notify the ViewModel (if you can access it)
+        MainWindowViewModel.Instance?.AddLogMessage(formattedMessage); // Ensure you have a way to access the ViewModel
     }
 
-    // Method to update the TextBox on the UI thread
-    public void AddLogToTextBox(string message)
-    {
-        if (_logsTextBox != null && _scrollViewer != null)
-        {
-            // Ensure this runs on the UI thread
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                _logsTextBox.Text += message + Environment.NewLine;
-
-                // Scroll to the bottom of the ScrollViewer
-                //_scrollViewer.ScrollToVerticalOffset(_scrollViewer.ExtentHeight);
-            });
-        }
-    }
+    
 }
