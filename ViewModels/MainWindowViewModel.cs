@@ -138,7 +138,8 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selected58GHzFrequency = value;
                 OnPropertyChanged(nameof(Selected58GHzFrequency));
-                UpdateConfigValue("channel", GetFrequencyChannelFromString(value)); // Update file content
+                int channel = GetFrequencyChannelFromString(value);
+                UpdateConfigValue("channel", channel); 
             }
         }
     }
@@ -153,6 +154,9 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selected24GHzFrequency = value;
                 OnPropertyChanged(nameof(Selected24GHzFrequency));
+                int channel = GetFrequencyChannelFromString(value);
+                UpdateConfigValue("channel", channel);
+                
             }
         }
     }
@@ -166,6 +170,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selected58GHzPower = value;
                 OnPropertyChanged(nameof(Selected58GHzPower));
+                UpdateConfigValue("driver_txpower_override", value.ToString()); 
             }
         }
     }
@@ -179,6 +184,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selected24GHzPower = value;
                 OnPropertyChanged(nameof(Selected24GHzPower));
+                UpdateConfigValue("txpower", value.ToString());
             }
         }
     }
@@ -192,6 +198,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selectedMCSIndex = value;
                 OnPropertyChanged(nameof(SelectedMCSIndex));
+                UpdateConfigValue("mcs_index", value.ToString());
             }
         }
     }
@@ -205,6 +212,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selectedSTBC = value;
                 OnPropertyChanged(nameof(SelectedSTBC));
+                UpdateConfigValue("stbc", value.ToString());
             }
         }
     }
@@ -218,6 +226,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selectedLDPC = value;
                 OnPropertyChanged(nameof(SelectedLDPC));
+                UpdateConfigValue("ldpc", value.ToString());
             }
         }
     }
@@ -231,6 +240,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selectedFecK = value;
                 OnPropertyChanged(nameof(SelectedFecK));
+                UpdateConfigValue("fec_k", value.ToString());
             }
         }
     }
@@ -244,6 +254,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             {
                 _selectedFecN = value;
                 OnPropertyChanged(nameof(SelectedFecN));
+                UpdateConfigValue("fec_n", value.ToString());
             }
         }
     }
@@ -281,7 +292,25 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
         { 173, "5865 MHz [173]" },
         { 177, "5885 MHz [177]" },
     };
+    private readonly Dictionary<int, string> _24frequencyMapping = new()
+    {
+        { 1, "2412 MHz [1]" },
+        { 2, "2417 MHz [2]" },
+        { 3, "2422 MHz [3]" },
+        { 4, "2427 MHz [4]" },
+        { 5, "2432 MHz [5]" },
+        { 6, "2437 MHz [6]" },
+        { 7, "2442 MHz [7]" },
+        { 8, "2447 MHz [8]" },
+        { 9, "2452 MHz [9]" },
+        { 10, "2457 MHz [10]" },
+        { 11, "2462 MHz [11]" },
+        { 12, "2467 MHz [12]" },
+        { 13, "2472 MHz [13]" },
+        { 14, "2484 MHz [14]" }
+    };
 
+    
     // Singleton Instance
     public static MainWindowViewModel Instance => _instance ??= new MainWindowViewModel();
 
@@ -302,58 +331,22 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
     {
         string formattedMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
         LogMessages.Insert(0, formattedMessage);
-        //LogMessages.Add(message);
     }
 
     private void InitializeCollections()
     {
         Frequencies58GHz = new ObservableCollection<string>(_58frequencyMapping.Values);
-        // Frequencies58GHz = new ObservableCollection<string>
-        // {
-        //     "5180 MHz [36]",
-        //     "5200 MHz [40]",
-        //     "5220 MHz [44]",
-        //     "5240 MHz [48]",
-        //     "5260 MHz [52]",
-        //     "5280 MHz [56]",
-        //     "5300 MHz [60]",
-        //     "5320 MHz [64]",
-        //     "5500 MHz [100]",
-        //     "5520 MHz [104]",
-        //     "5540 MHz [108]",
-        //     "5560 MHz [112]",
-        //     "5580 MHz [116]",
-        //     "5600 MHz [120]",
-        //     "5620 MHz [124]",
-        //     "5640 MHz [128]",
-        //     "5660 MHz [132]",
-        //     "5680 MHz [136]",
-        //     "5700 MHz [140]",
-        //     "5720 MHz [144]",
-        //     "5745 MHz [149]",
-        //     "5765 MHz [153]",
-        //     "5785 MHz [157]",
-        //     "5805 MHz [161]",
-        //     "5825 MHz [165]",
-        //     "5845 MHz [169]",
-        //     "5865 MHz [173]",
-        //     "5885 MHz [177]" 
-        //     
-        // };
+        Frequencies24GHz = new ObservableCollection<string>(_24frequencyMapping.Values);
 
-        Frequencies24GHz = new ObservableCollection<string>
-        {
-            "2412 MHz [1]", "2417 MHz [2]", "2422 MHz [3]", "2427 MHz [4]",
-            // Add other frequencies here
-        };
+        
 
-        Power58GHz = new ObservableCollection<int> { 1, 5, 10, 15, 20 };
+        Power58GHz = new ObservableCollection<int> { 1, 5, 10, 15, 20, 25 };
         Power24GHz = new ObservableCollection<int> { 20, 25, 30, 35, 40 };
-        MCSIndex = new ObservableCollection<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+        MCSIndex = new ObservableCollection<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
         STBC = new ObservableCollection<int> { 0, 1 };
         LDPC = new ObservableCollection<int> { 0, 1 };
-        FecK = new ObservableCollection<int> { 0, 1, 2, 3 };
-        FecN = new ObservableCollection<int> { 0, 1, 2, 3 };
+        FecK = new ObservableCollection<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        FecN = new ObservableCollection<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
     }
 
     private void SetDefaultValues()
@@ -408,10 +401,8 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
                      && !string.IsNullOrWhiteSpace(Password)
                      && !string.IsNullOrWhiteSpace(IpAddress)
                      && (!string.IsNullOrWhiteSpace(SelectedDeviceType));
-
-        //Console.WriteLine($"CanConnect: {CanConnect}, Username: {Username}, Password: {Password}, IP: {IpAddress}, DeviceType: {SelectedDeviceType}");
-        //AddLogMessage($"CanConnect: {CanConnect}, Username: {Username}, Password: {Password}, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");  
-        AddLogMessage($"CanConnect: {CanConnect}, Username: {Username}, Password: *****, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");    ;
+        
+        //AddLogMessage($"CanConnect: {CanConnect}, Username: {Username}, Password: *****, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");    ;
     }
 
     private void ParseFileContent(string filePath, string content)
@@ -436,18 +427,72 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
                         case "channel":
                             if (int.TryParse(value, out int channel))
                             {
-                                // Check if the channel number has a corresponding frequency string
-                                if (_58frequencyMapping.TryGetValue(channel, out var displayValue))
+                                string displayValue = GetFrequencyDisplayFromChannel(channel);
+                                if (channel > 30)
                                 {
-                                    Logger.Instance.Log($"Found matching frequency: {displayValue}");
-                                    Selected58GHzFrequency = displayValue;
+                                    if (!string.IsNullOrEmpty(displayValue))
+                                    {
+                                        Selected58GHzFrequency = displayValue;
+                                    }
                                 }
                                 else
                                 {
-                                    Logger.Instance.Log($"No matching frequency found for channel: {channel}");
+                                    if (!string.IsNullOrEmpty(displayValue))
+                                    {
+                                        _selected24GHzFrequency = displayValue;
+                                    }
+
                                 }
                             }
-
+                            break;
+                        case "driver_txpower_override":
+                            if (int.TryParse(value, out int tx_power))
+                            {
+                                Selected58GHzPower = tx_power;
+                                AddLogMessage($"Found matching power: {tx_power}");
+                            }
+                            break;
+                        case "txpower":
+                            if (int.TryParse(value, out int txpower))
+                            {
+                                Selected24GHzPower = txpower;
+                                AddLogMessage($"Found matching tx_power: {txpower}");
+                            }
+                            break;
+                        case "stbc":
+                            if (int.TryParse(value, out int stbc))
+                            {
+                                SelectedSTBC = stbc;
+                                AddLogMessage($"Found matching value stbc: {stbc}");
+                            }
+                            break;
+                        case "ldpc":
+                            if (int.TryParse(value, out int ldpc))
+                            {
+                                SelectedLDPC = ldpc;
+                                AddLogMessage($"Found matching value ldpc: {ldpc}");
+                            }
+                            break;
+                        case "mcs_index":
+                            if (int.TryParse(value, out int mcs_index))
+                            {
+                                SelectedMCSIndex = mcs_index;
+                                AddLogMessage($"Found matching value mcs_index: {mcs_index}");
+                            }
+                            break;
+                        case "fec_k":
+                            if (int.TryParse(value, out int fec_k))
+                            {
+                                SelectedFecK = fec_k;
+                                AddLogMessage($"Found matching value fec_k: {fec_k}");
+                            }
+                            break;
+                        case "fec_n":
+                            if (int.TryParse(value, out int fec_n))
+                            {
+                                SelectedFecK = fec_n;
+                                AddLogMessage($"Found matching value fec_n: {fec_n}");
+                            }
                             break;
 
                         // Handle other configuration parameters here
@@ -473,8 +518,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
                 // Perform actual SSH/SCP connection
                 string remotePath = "/etc/wfb.conf";
                 Task<string> wfb_config =
-                    _sshClientService.DownloadFileAsync(IpAddress, Username, Password, remotePath);
-                //AddLogMessage($"File contents: {wfb_config.Result}");
+                    _sshClientService.DownloadFileAsync(IpAddress, Username, Password, remotePath); 
 
                 // You can now parse the fileContent to match it to your UI elements
                 ParseFileContent(remotePath, wfb_config.Result);
@@ -539,7 +583,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
         AddLogMessage("Configuration saved successfully.");
     }
 
-// Helper method to parse the config file content into a dictionary
+    // Helper method to parse the config file content into a dictionary
     private Dictionary<string, string> ParseConfigFile(string fileContent)
     {
         var config = new Dictionary<string, string>();
@@ -576,6 +620,21 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
     }
 
     // Helper method to map the frequency string back to the channel number
+    private string GetFrequencyDisplayFromChannel(int channel)
+    {
+        if (_58frequencyMapping.TryGetValue(channel, out string displayValue))
+        {
+            return displayValue;
+        }
+
+        if (_24frequencyMapping.TryGetValue(channel, out displayValue))
+        {
+            return displayValue;
+        }
+
+        return string.Empty; // No match found
+    }
+    
     private int GetFrequencyChannelFromString(string frequencyString)
     {
         foreach (var entry in _58frequencyMapping)
@@ -583,6 +642,12 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             if (entry.Value == frequencyString)
                 return entry.Key;
         }
+        foreach (var entry in _24frequencyMapping)
+        {
+            if (entry.Value == frequencyString)
+                return entry.Key;
+        }
+
 
         return -1; // or handle error if no match is found
     }
