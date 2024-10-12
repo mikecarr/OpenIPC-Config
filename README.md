@@ -7,6 +7,7 @@ Mac
 
 ![img.png](images/main_app_mac.png)
 
+
 Windows
 ![img.png](images/main_app_win.png)
 
