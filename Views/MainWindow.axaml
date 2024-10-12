@@ -4,12 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        mc:Ignorable="d" 
+        mc:Ignorable="d" Width="900" Height="800"
         x:Class="OpenIPC_Config.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="OpenIPC Config"
-        MinWidth="100" MinHeight="200" d:ResizeMode="CanResize">
+        MinWidth="900" MinHeight="800" d:ResizeMode="CanResize">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -44,7 +44,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <!-- <RowDefinition Height="Auto" /> -->
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -275,6 +275,7 @@
                 </ScrollViewer>
             </Grid>
         </Border>
+        <TextBlock Grid.Row="3" HorizontalAlignment="Center">OpenIPC FPV 2024</TextBlock>
     </Grid>
 
 </Window>
