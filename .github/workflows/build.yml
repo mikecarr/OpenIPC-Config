@@ -15,10 +15,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [x64, arm64]
         include:
           - os: macos-latest
             arch: arm64
+          - os: ubuntu-latest
+            arch: x64
+          - os: windows-latest
+            arch: x64
 
     steps:
     - name: Checkout repository
@@ -36,7 +39,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Publish project
-      run: dotnet publish -c Release -r ${{ matrix.os == 'ubuntu-latest' && 'linux-x64' || matrix.os == 'windows-latest' && 'win-x64' || (matrix.os == 'macos-latest' && matrix.arch == 'arm64' && 'osx-arm64') || 'osx-x64' }} --self-contained
+      run: dotnet publish -c Release -r ${{ matrix.os == 'ubuntu-latest' && 'linux-x64' || matrix.os == 'windows-latest' && 'win-x64' || 'osx-arm64' }} --self-contained
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
