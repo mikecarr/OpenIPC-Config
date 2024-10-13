@@ -41,6 +41,78 @@ jobs:
     - name: Publish project
       run: dotnet publish -c Release -r ${{ matrix.os == 'ubuntu-latest' && 'linux-x64' || matrix.os == 'windows-latest' && 'win-x64' || 'osx-arm64' }} --self-contained
 
+    - name: Package macOS App Bundle
+      if: matrix.os == 'macos-latest'
+      run: |
+        APP_NAME="OpenIPC"
+        PUBLISH_DIR="./bin/Release/net8.0/osx-arm64/publish"
+        APP_DIR="${APP_NAME}.app"
+
+        # Create the app bundle structure
+        mkdir -p "${APP_DIR}/Contents/MacOS"
+        mkdir -p "${APP_DIR}/Contents/Resources"
+
+        # Copy the published binaries
+        cp -R "${PUBLISH_DIR}/"* "${APP_DIR}/Contents/MacOS/"
+
+        # Copy the icon file (icns)
+        cp ./Resources/OpenIPC.icns "${APP_DIR}/Contents/Resources/${APP_NAME}.icns"
+
+        # Create the Info.plist file
+        cat << EOF > "${APP_DIR}/Contents/Info.plist"
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>CFBundleName</key>
+          <string>${APP_NAME}</string>
+          <key>CFBundleExecutable</key>
+          <string>${APP_NAME}</string>
+          <key>CFBundleIdentifier</key>
+          <string>com.example.${APP_NAME}</string>
+          <key>CFBundleVersion</key>
+          <string>1.0</string>
+          <key>CFBundlePackageType</key>
+          <string>APPL</string>
+          <key>LSMinimumSystemVersion</key>
+          <string>10.13</string>
+          <key>CFBundleIconFile</key>
+          <string>${APP_NAME}.icns</string>
+        </dict>
+        </plist>
+        EOF
+
+        # Set executable permissions for the main binary
+        chmod +x "${APP_DIR}/Contents/MacOS/${APP_NAME}"
+
+    - name: Set Windows Icon
+      if: matrix.os == 'windows-latest'
+      run: |
+        APP_NAME="OpenIPC"
+        ICON_PATH="Resources/OpenIPC.ico"
+        PUBLISH_DIR="./bin/Release/net8.0/win-x64/publish"
+
+        # Set the icon using rcedit
+        curl -LO https://github.com/electron/rcedit/releases/download/v1.1.1/rcedit-x64.exe
+        chmod +x rcedit-x64.exe
+        ./rcedit-x64.exe "${PUBLISH_DIR}/${APP_NAME}.exe" --set-icon "${ICON_PATH}"
+
+    - name: Set Ubuntu Icon
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        APP_NAME="OpenIPC"
+        ICON_PATH="Resources/OpenIPC.png"
+        DESKTOP_FILE="${APP_NAME}.desktop"
+
+        # Create the .desktop file
+        cat << EOF > "${DESKTOP_FILE}"
+        [Desktop Entry]
+        Name=${APP_NAME}
+        Exec=${PWD}/bin/Release/net8.0/linux-x64/publish/${APP_NAME}
+        Icon=${PWD}/${ICON_PATH}
+        Type=Application
+        EOF
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
