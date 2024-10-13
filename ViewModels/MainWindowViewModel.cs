@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Avalonia.Animation;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using YamlDotNet.RepresentationModel;
 
 namespace OpenIPC_Config.ViewModels;
 
@@ -36,6 +37,19 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
     private int _selectedFecK;
     private int _selectedFecN;
 
+    private int _selectedResolution;
+    private int _selectedFPS;
+
+    private int _selectedCodec;
+    private int _selectedBitrate;
+    private int _selectedExposure;
+    private int _selectedContrast;
+    private int _selectedHUE;
+    private int _selectedSaturation;
+    private int _selectedLuminance;
+    private Boolean _selectedFlip;
+    private int _selectedMirror;
+    
     private string _username = string.Empty;
     private string _password = string.Empty;
     private string _ipAddress = string.Empty;
@@ -57,8 +71,23 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
     public ObservableCollection<int> LDPC { get; set; } = new ObservableCollection<int>();
     public ObservableCollection<int> FecK { get; set; } = new ObservableCollection<int>();
     public ObservableCollection<int> FecN { get; set; } = new ObservableCollection<int>();
+    
     private ObservableCollection<string> _logMessages = new ObservableCollection<string>();
-
+    
+    public ObservableCollection<string> Resolution { get; set; } = new ObservableCollection<string>();
+    
+    public ObservableCollection<int> FPS { get; set; } = new ObservableCollection<int>();
+    
+    public ObservableCollection<int> Codec { get; set; } = new ObservableCollection<int>();
+    public ObservableCollection<int> Bitrate { get; set; } = new ObservableCollection<int>();
+    public ObservableCollection<int> Exposure { get; set; } = new ObservableCollection<int>();
+    public ObservableCollection<int> Contrast { get; set; } = new ObservableCollection<int>();
+    public ObservableCollection<int> HUE { get; set; } = new ObservableCollection<int>();
+    public ObservableCollection<int> Saturation { get; set; } = new ObservableCollection<int>();
+    public ObservableCollection<int> Luminance { get; set; } = new ObservableCollection<int>();
+    public ObservableCollection<Boolean> Flip { get; set; } = new ObservableCollection<Boolean>();
+    public ObservableCollection<int> Mirror { get; set; } = new ObservableCollection<int>();
+    
     public DeviceConfig CurrentConfig { get; set; }
     
     
@@ -259,6 +288,144 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    public int SelectedFPS
+    {
+        get => _selectedFPS;
+        set
+        {
+            if (_selectedFPS != value)
+            {
+                _selectedFPS = value;
+                OnPropertyChanged(nameof(_selectedFPS));
+                UpdateConfigValue("fps", value.ToString());
+            }
+        }
+    }
+    public int SelectedCodec
+    {
+        get => _selectedCodec;
+        set
+        {
+            if (_selectedCodec != value)
+            {
+                _selectedCodec = value;
+                OnPropertyChanged(nameof(_selectedCodec));
+                UpdateConfigValue("codec", value.ToString());
+            }
+        }
+    }
+    
+    public int  SelectedBitrate
+    {
+        get => _selectedBitrate;
+        set
+        {
+            if (_selectedBitrate != value)
+            {
+                _selectedBitrate = value;
+                OnPropertyChanged(nameof(_selectedBitrate));
+                UpdateConfigValue("bitrate", value.ToString());
+            }
+        }
+    }
+    
+    public int SelectedExposure
+    {
+        get => _selectedExposure;
+        set
+        {
+            if (_selectedExposure != value)
+            {
+                _selectedExposure = value;
+                OnPropertyChanged(nameof(_selectedExposure));
+                UpdateConfigValue("bitrate", value.ToString());
+            }
+        }
+    }
+    
+    public int SelectedContrast
+    {
+        get => _selectedContrast;
+        set
+        {
+            if (_selectedContrast != value)
+            {
+                _selectedContrast = value;
+                OnPropertyChanged(nameof(_selectedContrast));
+                UpdateConfigValue("contrast", value.ToString());
+            }
+        }
+    }
+    public int SelectedHUE
+    {
+        get => _selectedHUE;
+        set
+        {
+            if (_selectedHUE != value)
+            {
+                _selectedHUE = value;
+                OnPropertyChanged(nameof(_selectedHUE));
+                UpdateConfigValue("hue", value.ToString());
+            }
+        }
+    }
+    
+    public int SelectedSaturation
+    {
+        get => _selectedSaturation;
+        set
+        {
+            if (_selectedSaturation != value)
+            {
+                _selectedSaturation = value;
+                OnPropertyChanged(nameof(_selectedSaturation));
+                UpdateConfigValue("saturation", value.ToString());
+            }
+        }
+    }
+    
+    public int SelectedLuminance
+    {
+        get => _selectedLuminance;
+        set
+        {
+            if (_selectedLuminance != value)
+            {
+                _selectedLuminance = value;
+                OnPropertyChanged(nameof(_selectedLuminance));
+                UpdateConfigValue("luminance", value.ToString());
+            }
+        }
+    }
+    
+    public Boolean SelectedFlip
+    {
+        get => _selectedFlip;
+        set
+        {
+            if (_selectedFlip != value)
+            {
+                _selectedFlip = value;
+                OnPropertyChanged(nameof(_selectedFlip));
+                UpdateConfigValue("flip", value.ToString());
+            }
+        }
+    }
+    
+    public int SelectedMirror
+    {
+        get => _selectedMirror;
+        set
+        {
+            if (_selectedMirror != value)
+            {
+                _selectedMirror = value;
+                OnPropertyChanged(nameof(_selectedMirror));
+                UpdateConfigValue("mirror", value.ToString());
+            }
+        }
+    }
+
     
     
     private readonly Dictionary<int, string> _58frequencyMapping = new()
@@ -381,7 +548,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
     private void LoadSelectedConfig()
     {
         CurrentConfig = _configService.GetConfig(SelectedDeviceType);
-    
+        
         // Notify property changes for bindings
         OnPropertyChanged(nameof(CurrentConfig));
         OnPropertyChanged(nameof(CurrentConfig.Username));
@@ -424,7 +591,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
                     // Match the key to your UI properties
                     switch (key)
                     {
-                        case "channel":
+                        case Wfb.Channel:
                             if (int.TryParse(value, out int channel))
                             {
                                 string displayValue = GetFrequencyDisplayFromChannel(channel);
@@ -444,55 +611,63 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
 
                                 }
                             }
+
                             break;
-                        case "driver_txpower_override":
+                        case Wfb.DriverTxpowerOverride:
                             if (int.TryParse(value, out int tx_power))
                             {
                                 Selected58GHzPower = tx_power;
                                 AddLogMessage($"Found matching power: {tx_power}");
                             }
+
                             break;
-                        case "txpower":
+                        case Wfb.Txpower:
                             if (int.TryParse(value, out int txpower))
                             {
                                 Selected24GHzPower = txpower;
                                 AddLogMessage($"Found matching tx_power: {txpower}");
                             }
+
                             break;
-                        case "stbc":
+                        case Wfb.Stbc:
                             if (int.TryParse(value, out int stbc))
                             {
                                 SelectedSTBC = stbc;
                                 AddLogMessage($"Found matching value stbc: {stbc}");
                             }
+
                             break;
-                        case "ldpc":
+                        case Wfb.Ldpc:
                             if (int.TryParse(value, out int ldpc))
                             {
                                 SelectedLDPC = ldpc;
                                 AddLogMessage($"Found matching value ldpc: {ldpc}");
                             }
+
                             break;
-                        case "mcs_index":
+                        case Wfb.McsIndex:
                             if (int.TryParse(value, out int mcs_index))
                             {
                                 SelectedMCSIndex = mcs_index;
                                 AddLogMessage($"Found matching value mcs_index: {mcs_index}");
                             }
+
                             break;
-                        case "fec_k":
+                        case Wfb.FecK:
                             if (int.TryParse(value, out int fec_k))
                             {
                                 SelectedFecK = fec_k;
                                 AddLogMessage($"Found matching value fec_k: {fec_k}");
                             }
+
                             break;
-                        case "fec_n":
+                        case Wfb.FecN:
                             if (int.TryParse(value, out int fec_n))
                             {
                                 SelectedFecK = fec_n;
                                 AddLogMessage($"Found matching value fec_n: {fec_n}");
                             }
+
                             break;
 
                         // Handle other configuration parameters here
@@ -500,8 +675,47 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
                 }
             }
         }
+        else if (filePath == "/etc/majestic.yaml")
+        {
+            using var reader = new StringReader(content);
+            var yaml = new YamlStream();
+            yaml.Load(reader);
+
+            var root = (YamlMappingNode)yaml.Documents[0].RootNode;
+            foreach (var entry in root.Children)
+            {
+                ParseYamlNode(entry.Key.ToString(), entry.Value);
+            }
+        }
     }
 
+    private void ParseYamlNode(string parentKey, YamlNode node)
+    {
+        if (node is YamlMappingNode mappingNode)
+        {
+            foreach (var child in mappingNode.Children)
+            {
+                string childKey = child.Key.ToString();
+                ParseYamlNode($"{parentKey}.{childKey}", child.Value);
+            }
+        }
+        else if (node is YamlScalarNode scalarNode)
+        {
+            string fullKey = parentKey;
+            
+            if (fullKey == "video0.size")
+            {
+                Logger.Instance.Log($"Found video0.size: {scalarNode.Value}");
+                
+            }
+            
+            else
+            {
+                Logger.Instance.Log($"{fullKey}: {scalarNode.Value}");
+            }
+        }
+    }
+    
 
     private async Task ExecuteConnectAsync()
     {
@@ -518,10 +732,16 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
                 // Perform actual SSH/SCP connection
                 string remotePath = "/etc/wfb.conf";
                 Task<string> wfb_config =
-                    _sshClientService.DownloadFileAsync(IpAddress, Username, Password, remotePath); 
-
+                    _sshClientService.DownloadFileAsync(IpAddress, Username, Password, remotePath);
+                
                 // You can now parse the fileContent to match it to your UI elements
                 ParseFileContent(remotePath, wfb_config.Result);
+                
+                remotePath = "/etc/majestic.yaml";
+                Task<string> majestic_yaml =
+                    _sshClientService.DownloadFileAsync(IpAddress, Username, Password, remotePath);
+
+                ParseFileContent(remotePath, majestic_yaml.Result);
             });
 
             await Dispatcher.UIThread.InvokeAsync(() =>
@@ -651,6 +871,5 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
 
         return -1; // or handle error if no match is found
     }
-    
     
 }

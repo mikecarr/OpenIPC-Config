@@ -143,7 +143,96 @@
                 </TabItem>
 
                 <TabItem Header="Camera Settings" FontSize="14">
-                    <TextBlock Margin="5">Camera Settings</TextBlock>
+                    <Border BorderBrush="Black"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20*" />
+                                <ColumnDefinition Width="50*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!--Resolution -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Select Resolution" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Resolution}"
+                                      SelectedItem="{Binding Selected58GHzFrequency, Mode=TwoWay}" />
+                            
+                            <!-- FPS -->
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Select FPS" />
+                            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FPS}"
+                                      SelectedItem="{Binding Selected58GHzPower}" />
+
+
+                            <!-- Codec -->
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Select Codec" />
+                            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Codec}"
+                                      SelectedItem="{Binding Selected24GHzFrequency}" />
+
+                            <!-- Bitrate -->
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Select Bitrate" />
+                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Bitrate}"
+                                      SelectedItem="{Binding Selected24GHzPower}" />
+
+                            <!-- Exposure -->
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Select Exposure" />
+                            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Exposure}"
+                                      SelectedItem="{Binding SelectedMCSIndex}" />
+
+                            <!-- Contrast -->
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Select Contrast" />
+                            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Contrast}"
+                                      SelectedItem="{Binding SelectedSTBC}" />
+
+                            <!-- HUE -->
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Select HUE" />
+                            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding HUE}"
+                                      SelectedItem="{Binding SelectedLDPC}" />
+
+                            <!-- Saturation -->
+                            <TextBlock Grid.Row="7" Grid.Column="0" Text="Select Saturation" />
+                            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding Saturation}"
+                                      SelectedItem="{Binding SelectedFecK}" />
+
+                            <!-- Luminance -->
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Select Luminance" />
+                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Luminance}"
+                                      SelectedItem="{Binding SelectedFecN}" />
+
+                            <!-- Flip -->
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Select Flip" />
+                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Flip}"
+                                      SelectedItem="{Binding SelectedFecN}" />
+                            
+                            <!-- Mirror -->
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Select Mirror" />
+                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Mirror}"
+                                      SelectedItem="{Binding SelectedFecN}" />
+
+                            
+                            <!-- Restart Wfb Button -->
+                            <Button Grid.Row="9" Grid.Column="1" Command="{Binding SaveConfigCommand}"
+                                    IsEnabled="{Binding CanConnect}">
+                                Restart WFB
+                            </Button>
+
+                        </Grid>
+
+
+                    </Border>
                 </TabItem>
 
                 <TabItem Header="Telemetry" FontSize="14">
