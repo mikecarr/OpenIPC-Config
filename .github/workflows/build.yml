@@ -1,0 +1,41 @@
+name: Build Avalonia MVVM App
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.8'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build project
+      run: dotnet build --configuration Release
+
+    - name: Publish project
+      run: dotnet publish -c Release -r ${{ matrix.os == 'ubuntu-latest' && 'linux-x64' || matrix.os == 'windows-latest' && 'win-x64' || 'osx-x64' }} --self-contained
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: AvaloniaApp-${{ matrix.os }}
+        path: '**/bin/Release/net8.0/*' # Adjust the path to match your project's output folder
