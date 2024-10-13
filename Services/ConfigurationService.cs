@@ -9,31 +9,29 @@ public class ConfigurationService
 
     public ConfigurationService()
     {
-        _deviceConfigs = new Dictionary<string, DeviceConfig>
-        {
-            { "Camera", new DeviceConfig() },
-            { "Radxa", new DeviceConfig() },
-            { "NVR", new DeviceConfig() }
-        };
+       
     }
 
     public DeviceConfig GetConfig(string deviceType)
     {
-        if (string.IsNullOrEmpty(deviceType))
-        {
-            throw new ArgumentNullException(nameof(deviceType), "Device type cannot be null or empty.");
-        }
-
-        if (!_deviceConfigs.TryGetValue(deviceType, out var config))
-        {
-            throw new KeyNotFoundException($"No configuration found for device type: {deviceType}");
-        }
-        return config;
+        // TODO: local config from file
+        // if (string.IsNullOrEmpty(deviceType))
+        // {
+        //     throw new ArgumentNullException(nameof(deviceType), "Device type cannot be null or empty.");
+        // }
+        //
+        // if (!_deviceConfigs.TryGetValue(deviceType, out var config))
+        // {
+        //     throw new KeyNotFoundException($"No configuration found for device type: {deviceType}");
+        // }
+        // return config;
+        return null;
     }
 
-    public void SaveConfig(string deviceType, DeviceConfig config)
+    public void SaveConfig(DeviceConfig config)
     {
-        _deviceConfigs[deviceType] = config;
+        // TODO: save config from file
+        //_deviceConfigs[deviceType] = config;
         // Optionally, save to a file or database for persistence
     }
 }

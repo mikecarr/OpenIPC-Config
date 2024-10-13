@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        mc:Ignorable="d" Width="900" Height="800"
+        mc:Ignorable="d" Width="900" Height="900"
         x:Class="OpenIPC_Config.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -131,7 +131,7 @@
                                       SelectedItem="{Binding SelectedFecN}" />
 
                             <!-- Restart Wfb Button -->
-                            <Button Grid.Row="9" Grid.Column="1" Command="{Binding SaveConfigCommand}"
+                            <Button Grid.Row="9" Grid.Column="1" Command="{Binding SaveWfbConfigCommand}"
                                     IsEnabled="{Binding CanConnect}">
                                 Restart WFB
                             </Button>
@@ -159,6 +159,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
@@ -169,64 +171,64 @@
                             <!--Resolution -->
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Select Resolution" />
                             <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Resolution}"
-                                      SelectedItem="{Binding Selected58GHzFrequency, Mode=TwoWay}" />
+                                      SelectedItem="{Binding SelectedResolution, Mode=TwoWay}" />
                             
                             <!-- FPS -->
                             <TextBlock Grid.Row="1" Grid.Column="0" Text="Select FPS" />
                             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FPS}"
-                                      SelectedItem="{Binding Selected58GHzPower}" />
+                                      SelectedItem="{Binding SelectedFps}" />
 
 
                             <!-- Codec -->
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="Select Codec" />
                             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Codec}"
-                                      SelectedItem="{Binding Selected24GHzFrequency}" />
+                                      SelectedItem="{Binding SelectedCodec}" />
 
                             <!-- Bitrate -->
                             <TextBlock Grid.Row="3" Grid.Column="0" Text="Select Bitrate" />
                             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Bitrate}"
-                                      SelectedItem="{Binding Selected24GHzPower}" />
+                                      SelectedItem="{Binding SelectedBitrate}" />
 
                             <!-- Exposure -->
                             <TextBlock Grid.Row="4" Grid.Column="0" Text="Select Exposure" />
                             <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Exposure}"
-                                      SelectedItem="{Binding SelectedMCSIndex}" />
+                                      SelectedItem="{Binding SelectedExposure}" />
 
                             <!-- Contrast -->
                             <TextBlock Grid.Row="5" Grid.Column="0" Text="Select Contrast" />
                             <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Contrast}"
-                                      SelectedItem="{Binding SelectedSTBC}" />
+                                      SelectedItem="{Binding SelectedContrast}" />
 
                             <!-- HUE -->
                             <TextBlock Grid.Row="6" Grid.Column="0" Text="Select HUE" />
-                            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding HUE}"
-                                      SelectedItem="{Binding SelectedLDPC}" />
+                            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding Hue}"
+                                      SelectedItem="{Binding SelectedHue}" />
 
                             <!-- Saturation -->
                             <TextBlock Grid.Row="7" Grid.Column="0" Text="Select Saturation" />
                             <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding Saturation}"
-                                      SelectedItem="{Binding SelectedFecK}" />
+                                      SelectedItem="{Binding SelectedSaturation}" />
 
                             <!-- Luminance -->
                             <TextBlock Grid.Row="8" Grid.Column="0" Text="Select Luminance" />
                             <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Luminance}"
-                                      SelectedItem="{Binding SelectedFecN}" />
+                                      SelectedItem="{Binding SelectedLuminance}" />
 
                             <!-- Flip -->
-                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Select Flip" />
-                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Flip}"
-                                      SelectedItem="{Binding SelectedFecN}" />
+                            <TextBlock Grid.Row="9" Grid.Column="0" Text="Select Flip" />
+                            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding Flip}"
+                                      SelectedItem="{Binding SelectedFlip}" />
                             
                             <!-- Mirror -->
-                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Select Mirror" />
-                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Mirror}"
-                                      SelectedItem="{Binding SelectedFecN}" />
+                            <TextBlock Grid.Row="10" Grid.Column="0" Text="Select Mirror" />
+                            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{Binding Mirror}"
+                                      SelectedItem="{Binding SelectedMirror}" />
 
                             
                             <!-- Restart Wfb Button -->
-                            <Button Grid.Row="9" Grid.Column="1" Command="{Binding SaveConfigCommand}"
+                            <Button Grid.Row="11" Grid.Column="1" Command="{Binding SaveRestartMajesticCommand}"
                                     IsEnabled="{Binding CanConnect}">
-                                Restart WFB
+                                Restart Majestic
                             </Button>
 
                         </Grid>
