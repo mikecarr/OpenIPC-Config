@@ -722,13 +722,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(CurrentConfig.Password));
         OnPropertyChanged(nameof(CurrentConfig.IpAddress));
     }
-
-    public void SaveWfbConfigCommand()
-    {
-        // _configService.SaveConfig(SelectedDeviceType, CurrentConfig);
-    }
-
-
+    
     private void CheckIfCanConnect()
     {
         CanConnect = !string.IsNullOrWhiteSpace(Username)
@@ -1074,7 +1068,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    public async Task SaveConfigCommand()
+    public async Task SaveWfbConfigCommand()
     {
         // Load the existing config file from the remote system
         var configContent =
