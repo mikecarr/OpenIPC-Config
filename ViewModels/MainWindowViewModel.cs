@@ -722,7 +722,7 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(CurrentConfig.Password));
         OnPropertyChanged(nameof(CurrentConfig.IpAddress));
     }
-    
+
     private void CheckIfCanConnect()
     {
         CanConnect = !string.IsNullOrWhiteSpace(Username)
@@ -735,139 +735,92 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
 
     private void ParseFileContent(string filePath, string content)
     {
-        // Implement your logic to match file content to UI properties.
-        if (filePath == "/etc/wfb.conf")
+        if (filePath == OpenIPC.WFB_CONF_FILE_LOC)
         {
-            // Example parsing logic:
-            // Assume the content is in key=value format
-            var lines = content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var line in lines)
-            {
-                var parts = line.Split('=');
-                if (parts.Length == 2)
-                {
-                    string key = parts[0].Trim();
-                    string value = parts[1].Trim();
-
-                    // Match the key to your UI properties
-                    switch (key)
-                    {
-                        case Wfb.Channel:
-                            if (int.TryParse(value, out int channel))
-                            {
-                                string displayValue = GetFrequencyDisplayFromChannel(channel);
-                                if (channel > 30)
-                                {
-                                    if (!string.IsNullOrEmpty(displayValue))
-                                    {
-                                        Selected58GHzFrequency = displayValue;
-                                    }
-                                }
-                                else
-                                {
-                                    if (!string.IsNullOrEmpty(displayValue))
-                                    {
-                                        _selected24GHzFrequency = displayValue;
-                                    }
-                                }
-                            }
-
-                            break;
-                        case Wfb.Frequency:
-                            if (int.TryParse(value, out int channel_frequency))
-                            {
-                                string displayValue = GetFrequencyDisplayFromChannel(channel_frequency);
-                                if (channel_frequency > 30)
-                                {
-                                    if (!string.IsNullOrEmpty(displayValue))
-                                    {
-                                        Selected58GHzFrequency = displayValue;
-                                    }
-                                }
-                                else
-                                {
-                                    if (!string.IsNullOrEmpty(displayValue))
-                                    {
-                                        _selected24GHzFrequency = displayValue;
-                                    }
-                                }
-                            }
-
-                            break;
-                            
-                        case Wfb.DriverTxpowerOverride:
-                            if (int.TryParse(value, out int tx_power))
-                            {
-                                Selected58GHzPower = tx_power;
-                                AddLogMessage($"Found matching power: {tx_power}");
-                            }
-
-                            break;
-                        case Wfb.Txpower:
-                            if (int.TryParse(value, out int txpower))
-                            {
-                                Selected24GHzPower = txpower;
-                                AddLogMessage($"Found matching tx_power: {txpower}");
-                            }
-
-                            break;
-                        case Wfb.Stbc:
-                            if (int.TryParse(value, out int stbc))
-                            {
-                                SelectedSTBC = stbc;
-                                AddLogMessage($"Found matching value stbc: {stbc}");
-                            }
-
-                            break;
-                        case Wfb.Ldpc:
-                            if (int.TryParse(value, out int ldpc))
-                            {
-                                SelectedLDPC = ldpc;
-                                AddLogMessage($"Found matching value ldpc: {ldpc}");
-                            }
-
-                            break;
-                        case Wfb.McsIndex:
-                            if (int.TryParse(value, out int mcs_index))
-                            {
-                                SelectedMCSIndex = mcs_index;
-                                AddLogMessage($"Found matching value mcs_index: {mcs_index}");
-                            }
-
-                            break;
-                        case Wfb.FecK:
-                            if (int.TryParse(value, out int fec_k))
-                            {
-                                SelectedFecK = fec_k;
-                                AddLogMessage($"Found matching value fec_k: {fec_k}");
-                            }
-
-                            break;
-                        case Wfb.FecN:
-                            if (int.TryParse(value, out int fec_n))
-                            {
-                                SelectedFecK = fec_n;
-                                AddLogMessage($"Found matching value fec_n: {fec_n}");
-                            }
-
-                            break;
-
-                        // Handle other configuration parameters here
-                    }
-                }
-            }
+            ParseWfbConfig(content);
         }
         else if (filePath == OpenIPC.MAJESTIC_FILE_LOC)
         {
-            using var reader = new StringReader(content);
-            var yaml = new YamlStream();
-            yaml.Load(reader);
+            ParseYamlConfig(content);
+        }
+    }
 
-            var root = (YamlMappingNode)yaml.Documents[0].RootNode;
-            foreach (var entry in root.Children)
+    private void ParseWfbConfig(string content)
+    {
+        var lines = content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var line in lines)
+        {
+            var parts = line.Split('=');
+            if (parts.Length != 2) continue;
+
+            string key = parts[0].Trim();
+            string value = parts[1].Trim();
+
+            if (!int.TryParse(value, out int intValue)) continue;
+
+            switch (key)
             {
-                ParseYamlNode(entry.Key.ToString(), entry.Value);
+                case Wfb.Channel:
+                case Wfb.Frequency:
+                    UpdateFrequency(intValue);
+                    break;
+                case Wfb.DriverTxpowerOverride:
+                    Selected58GHzPower = intValue;
+                    AddLogMessage($"Found matching power: {intValue}");
+                    break;
+                case Wfb.Txpower:
+                    Selected24GHzPower = intValue;
+                    AddLogMessage($"Found matching tx_power: {intValue}");
+                    break;
+                case Wfb.Stbc:
+                    SelectedSTBC = intValue;
+                    AddLogMessage($"Found matching value stbc: {intValue}");
+                    break;
+                case Wfb.Ldpc:
+                    SelectedLDPC = intValue;
+                    AddLogMessage($"Found matching value ldpc: {intValue}");
+                    break;
+                case Wfb.McsIndex:
+                    SelectedMCSIndex = intValue;
+                    AddLogMessage($"Found matching value mcs_index: {intValue}");
+                    break;
+                case Wfb.FecK:
+                    SelectedFecK = intValue;
+                    AddLogMessage($"Found matching value fec_k: {intValue}");
+                    break;
+                case Wfb.FecN:
+                    SelectedFecK = intValue;
+                    AddLogMessage($"Found matching value fec_n: {intValue}");
+                    break;
             }
+        }
+    }
+
+    private void UpdateFrequency(int channel)
+    {
+        string displayValue = GetFrequencyDisplayFromChannel(channel);
+        if (string.IsNullOrEmpty(displayValue)) return;
+
+        if (channel > 30)
+        {
+            Selected58GHzFrequency = displayValue;
+        }
+        else
+        {
+            _selected24GHzFrequency = displayValue;
+        }
+    }
+
+    private void ParseYamlConfig(string content)
+    {
+        using var reader = new StringReader(content);
+        var yaml = new YamlStream();
+        yaml.Load(reader);
+
+        var root = (YamlMappingNode)yaml.Documents[0].RootNode;
+        foreach (var entry in root.Children)
+        {
+            ParseYamlNode(entry.Key.ToString(), entry.Value);
         }
     }
 
@@ -938,7 +891,6 @@ public partial class MainWindowViewModel : INotifyPropertyChanged
             }
         }
     }
-
 
 
     private async Task ExecuteConnectAsync()
