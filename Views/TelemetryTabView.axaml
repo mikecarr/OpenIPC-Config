@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OpenIPC_Config.Views.TelemetryTabView">
+    
+    
+    <!-- Telemetry Tab Content -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Side: ComboBoxes -->
+        <StackPanel Orientation="Vertical" Spacing="5" Margin="10">
+            <ComboBox Width="250" PlaceholderText="Select Serial Port"/>
+            <ComboBox Width="250" PlaceholderText="Select Baud Rate"/>
+            <ComboBox Width="250" PlaceholderText="Select MAVFWD(0)/MAV-ROUTER(1)"/>
+            <ComboBox Width="250" PlaceholderText="Select MCS INDEX"/>
+            <ComboBox Width="250" PlaceholderText="Select Aggregate"/>
+            <ComboBox Width="250" PlaceholderText="Select RC Channel"/>
+        </StackPanel>
+
+        <!-- Right Side: Buttons and Toggle Switches -->
+        <StackPanel Orientation="Vertical" Spacing="5" Grid.Column="1" Margin="10">
+            <Button Content="Enable UART0"  />
+            <Button Content="Disable UART0"  />
+            <Button Content="Add MAVLINK"  />
+            <Button Content="Upload MSPOSD"  />
+            <Button Content="Upload INAV Fonts" />
+                        
+            <!-- Toggle for Onboard REC -->
+            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                <TextBlock Text="Onboard REC" VerticalAlignment="Center" Foreground="White"/>
+                <RadioButton Content="ON" IsChecked="True"/>
+                <RadioButton Content="OFF" Margin="10,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+    
+</UserControl>

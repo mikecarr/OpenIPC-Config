@@ -128,4 +128,14 @@ dotnet publish -c Release -r <RID> --self-contained
   * error: NU1202: Package Avalonia.Android 11.1.4 is not compatible with net8.0 (.NETCoreApp,Version=v8.0). Package Avalonia.Android 11.1.4 supports: net8.0-android34.0 (.NETCoreApp,Version=v8.0)
     error: Package 'Avalonia.Android' is incompatible with 'all' frameworks in project '/Users/mcarr/RiderProjects/OpenIPC-Config/OpenIPC-Config.csproj'.
 
+
+
+## Debugging
+When app is running, check DevTools via F12 (Mac fn-F12) for VisualTree
+![devtools.png](images/devtools.png)
+
+## Build Icons
+/Users/mcarr/workspace/icons
 ## References
+
+* https://avaloniaui.net/blog/the-definitive-guide-to-building-and-deploying-avalonia-applications-for-macos

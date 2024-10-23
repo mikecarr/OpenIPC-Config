@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenIPC_Config.Models;
 
 namespace OpenIPC_Config;
 

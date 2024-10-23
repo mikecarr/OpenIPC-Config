@@ -1,372 +1,192 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:OpenIPC_Config.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        mc:Ignorable="d" Width="900" Height="900"
-        x:Class="OpenIPC_Config.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="OpenIPC Config"
-        MinWidth="900" MinHeight="800" d:ResizeMode="CanResize">
-
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
+        xmlns:viewModels="clr-namespace:OpenIPC_Config.ViewModels"
+        xmlns:views="clr-namespace:OpenIPC_Config.Views"
+        xmlns:openIpcConfig="clr-namespace:OpenIPC_Config"
+        xmlns:models="clr-namespace:OpenIPC_Config.Models"
+        Title="OpenIPC Configurator"
+        Width="800" Height="600"
+        x:DataType="viewModels:MainWindowViewModel"
+        x:Class="OpenIPC_Config.Views.MainWindow">
+    
     
     <!-- Add styles and resources for this window -->
     <Window.Styles>
+        
+        <Style Selector="TabItem">
+            <!-- Font size and weight -->
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+    
+            <!-- Padding inside the tab item -->
+            <Setter Property="Padding" Value="5,5,5,5" />
+    
+            <!-- Background and foreground colors -->
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Foreground" Value="Black" />
+    
+            <!-- Border and corner radius -->
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="5" />
+    
+            
+        </Style>
+        
+        <!-- Hover effect -->
+        <Style Selector="TabItem:hover">
+            <Setter Property="Background" Value="DarkGray" />
+        </Style>
+        
+        <!-- Style for selected TabItem -->
+        <Style Selector="TabItem:selected">
+            <Setter Property="Background" Value="Orange" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Orange" />
+        </Style>
+
+        
         <Style Selector="ListBoxItem">
             <Setter Property="Padding" Value="5" />
             <Setter Property="Margin" Value="1" />
             <Setter Property="MinHeight" Value="10" />
         </Style>
         
-        <Style Selector="ComboBox">
-            <Setter Property="Padding" Value="5"></Setter>
-            <Setter Property="Margin" Value="1" />
-            <Setter Property="MinHeight" Value="10" />
-        </Style>
+        <!-- <Style Selector="ComboBox"> -->
+        <!--     <Setter Property="Padding" Value="5"></Setter> -->
+        <!--     <Setter Property="Margin" Value="1" /> -->
+        <!--     <Setter Property="MinHeight" Value="10" /> -->
+        <!-- </Style> -->
         
         <Style Selector="TextBox">
             <Setter Property="Padding" Value="5"></Setter>
             <Setter Property="Margin" Value="1" />
             <Setter Property="MinHeight" Value="10" />
         </Style>
+        
+        <Style Selector="Button">
+            <!-- Internal padding of the button content -->
+            <Setter Property="Padding" Value="5,3" />
+    
+            <!-- Border properties -->
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Black" />
+    
+            <!-- Background color -->
+            <Setter Property="Background" Value="Orange" />
+    
+            <!-- External margin to create space between buttons and other elements -->
+            <Setter Property="Margin" Value="2" />
+    
+            <!-- Minimum height and width to prevent buttons from becoming too small -->
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="MinWidth" Value="80" />
+    
+            <!-- Corner radius for rounded corners -->
+            <Setter Property="CornerRadius" Value="5" />
+    
+            <!-- Text color and alignment -->
+            <Setter Property="Foreground" Value="Black" />
+    
+            <!-- Center the text horizontally and vertically inside the button -->
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <!-- -->
+            <!-- Hover effect to change the background when hovered -->
+            <!-- <Style Selector="Button:hover"> -->
+            <!--     <Setter Property="Background" Value="DarkOrange" /> -->
+            <!-- </Style> -->
+        </Style>
+
+        
+        <Style Selector="TabItem">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+            <Setter Property="MinWidth" Value="10" />
+        </Style>
     </Window.Styles>
 
-
+    
     <Grid>
+        
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/> <!-- TabControl -->
+            <RowDefinition Height="*"/>    <!-- Main Content -->
+            <RowDefinition Height="Auto"/> <!-- Footer Buttons -->
+            <RowDefinition Height="Auto"/> <!-- Logger -->
         </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120*" />
-            <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <Border  
-                BorderBrush="Black"
-                BorderThickness="2"
-                CornerRadius="5"
-                Padding="10" Margin="10">
-
-            <TabControl x:Name="MainTabControl" Grid.Row="0" Grid.ColumnSpan="2">
-
-                <TabItem Header="WFB Settings" FontSize="14">
-                    <Border BorderBrush="Black"
-                            BorderThickness="1"
-                            CornerRadius="4"
-                            Padding="5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20*" />
-                                <ColumnDefinition Width="50*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!-- 5.8GHz Frequency -->
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Select 5.8GHz Frequency" />
-                            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Frequencies58GHz}"
-                                      SelectedItem="{Binding Selected58GHzFrequency, Mode=TwoWay}" />
-                            <!-- 5.8GHz TX Power -->
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Select 5.8GHz TX Power" />
-                            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Power58GHz}"
-                                      SelectedItem="{Binding Selected58GHzPower}" />
-
-
-                            <!-- 2.4GHz Frequency -->
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Select 2.4GHz Frequency" />
-                            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Frequencies24GHz}"
-                                      SelectedItem="{Binding Selected24GHzFrequency}" />
-
-                            <!-- 2.4GHz TX Power -->
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Select 2.4GHz TX Power" />
-                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Power24GHz}"
-                                      SelectedItem="{Binding Selected24GHzPower}" />
-
-                            <!-- MCSIndex -->
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Select MCS Index" />
-                            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding MCSIndex}"
-                                      SelectedItem="{Binding SelectedMCSIndex}" />
-
-                            <!-- STBC -->
-                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Select STBC" />
-                            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding STBC}"
-                                      SelectedItem="{Binding SelectedSTBC}" />
-
-                            <!-- LDPC -->
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Select LDPC" />
-                            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding LDPC}"
-                                      SelectedItem="{Binding SelectedLDPC}" />
-
-                            <!-- FecK -->
-                            <TextBlock Grid.Row="7" Grid.Column="0" Text="Select FEC K" />
-                            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding FecK}"
-                                      SelectedItem="{Binding SelectedFecK}" />
-
-                            <!-- FecN -->
-                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Select FEC N" />
-                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding FecN}"
-                                      SelectedItem="{Binding SelectedFecN}" />
-
-                            <!-- Restart Wfb Button -->
-                            <Button Grid.Row="9" Grid.Column="1" Command="{Binding SaveWfbConfigCommand}"
-                                    IsEnabled="{Binding CanConnect}">
-                                Restart WFB
-                            </Button>
-
-                        </Grid>
-
-
-                    </Border>
-                </TabItem>
-
-                <TabItem Header="Camera Settings" FontSize="14">
-                    <Border BorderBrush="Black"
-                            BorderThickness="1"
-                            CornerRadius="4"
-                            Padding="5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20*" />
-                                <ColumnDefinition Width="50*" />
-                            </Grid.ColumnDefinitions>
-
-                            <!--Resolution -->
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Select Resolution" />
-                            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Resolution}"
-                                      SelectedItem="{Binding SelectedResolution, Mode=TwoWay}" />
-                            
-                            <!-- FPS -->
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Select FPS" />
-                            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FPS}"
-                                      SelectedItem="{Binding SelectedFps}" />
-
-
-                            <!-- Codec -->
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Select Codec" />
-                            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Codec}"
-                                      SelectedItem="{Binding SelectedCodec}" />
-
-                            <!-- Bitrate -->
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Select Bitrate" />
-                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Bitrate}"
-                                      SelectedItem="{Binding SelectedBitrate}" />
-
-                            <!-- Exposure -->
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Select Exposure" />
-                            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Exposure}"
-                                      SelectedItem="{Binding SelectedExposure}" />
-
-                            <!-- Contrast -->
-                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Select Contrast" />
-                            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Contrast}"
-                                      SelectedItem="{Binding SelectedContrast}" />
-
-                            <!-- HUE -->
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Select HUE" />
-                            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding Hue}"
-                                      SelectedItem="{Binding SelectedHue}" />
-
-                            <!-- Saturation -->
-                            <TextBlock Grid.Row="7" Grid.Column="0" Text="Select Saturation" />
-                            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding Saturation}"
-                                      SelectedItem="{Binding SelectedSaturation}" />
-
-                            <!-- Luminance -->
-                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Select Luminance" />
-                            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Luminance}"
-                                      SelectedItem="{Binding SelectedLuminance}" />
-
-                            <!-- Flip -->
-                            <TextBlock Grid.Row="9" Grid.Column="0" Text="Select Flip" />
-                            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding Flip}"
-                                      SelectedItem="{Binding SelectedFlip}" />
-                            
-                            <!-- Mirror -->
-                            <TextBlock Grid.Row="10" Grid.Column="0" Text="Select Mirror" />
-                            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{Binding Mirror}"
-                                      SelectedItem="{Binding SelectedMirror}" />
-
-                            
-                            <!-- Restart Wfb Button -->
-                            <Button Grid.Row="11" Grid.Column="1" Command="{Binding SaveRestartMajesticCommand}"
-                                    IsEnabled="{Binding CanConnect}">
-                                Restart Majestic
-                            </Button>
-
-                        </Grid>
-
-
-                    </Border>
-                </TabItem>
-
-                <TabItem Header="Telemetry" FontSize="14">
-                    <TextBlock Margin="5">Telemetry Settings</TextBlock>
-                </TabItem>
-
-                <TabItem Header="VRX" FontSize="14">
-                    <TextBlock Margin="5">VRX Settings</TextBlock>
-                </TabItem>
-
-                <TabItem Header="Setup" FontSize="14">
-                    <TextBlock Margin="5">Setup</TextBlock>
-                </TabItem>
-
-                <TabItem Header="OSD" FontSize="14">
-                    <TextBlock Margin="5">OSD</TextBlock>
-                </TabItem>
+        
+        <!-- TabControl at the top -->
+        <TabControl Grid.Row="0">
+            <TabItem Header="WFB Settings">
+                <!-- Load the UserControl for WFB Settings -->
+                <!-- <views:WfbSettingsView /> -->
+                <views:WfbSettingsView  />
+            </TabItem>
+            
+             <TabItem Header="Camera Settings">
+                 <views:CameraSettingsView />
+             </TabItem>
+            
+            
+            <TabItem Header="Telemetry">
+                <views:TelemetryTabView />
+            </TabItem>
+            <TabItem Header="VRX">
+                <views:VRXTabView />
                 
-                
-            </TabControl>
-        </Border>
+            </TabItem>
 
-        <Border Grid.Column="0" Grid.Row="1" 
-                
-                BorderBrush="Black"
-                BorderThickness="2"
-                CornerRadius="5"
-                Padding="10" Margin="10">
-            <Grid Grid.Row="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <TabItem Header="Setup">
+                <views:SetupTabView />
+            </TabItem>
+            <!-- <TabItem Header="OSD" /> -->
+        </TabControl>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <!-- <Border Grid.Row="0" Background="WhiteSmoke" -->
-                <!--         BorderBrush="Black" -->
-                <!--         BorderThickness="1" -->
-                <!--         CornerRadius="4" -->
-                <!--         Padding="5"> -->
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="33*" />
-                            <ColumnDefinition Width="33*" />
-                            <ColumnDefinition Width="33*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Label Grid.Column="0" Grid.Row="0">Username:</Label>
-                        <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Username, Mode=TwoWay}" />
-
-                        <Label Grid.Column="0" Grid.Row="1">Password:</Label>
-                        <MaskedTextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Password, Mode=TwoWay}" />
-
-                        <Label Grid.Column="0" Grid.Row="2">IP:</Label>
-                        <TextBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding IpAddress, Mode=TwoWay}" />
-                        
-                        <Button Grid.Column="0" Grid.Row="3" Content="Connect"
-                                Command="{Binding ConnectCommand}"
-                                IsEnabled="{Binding CanConnect}" />
-
-
-                        <Button Grid.Column="1" Grid.Row="3" IsEnabled="{Binding CanConnect}">Save/Boot</Button>
-                        <Button Grid.Column="2" Grid.Row="3" IsEnabled="{Binding CanConnect}">Reboot</Button>
-                    </Grid>
-                <!-- </Border> -->
-
-
-                <Grid Grid.Column="2" HorizontalAlignment="Right">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <RadioButton Grid.Column="0" Grid.Row="0" GroupName="DeviceType" Content="OpenIPC Camera"
-                                 IsChecked="{Binding SelectedDeviceType, Converter={StaticResource DeviceTypeConverter}, ConverterParameter='Camera'}" />
-                    <RadioButton Grid.Column="0" Grid.Row="1" GroupName="DeviceType" Content="Radxa Zero 3W (WFB-ng)"
-                                 IsChecked="{Binding SelectedDeviceType, Converter={StaticResource DeviceTypeConverter}, ConverterParameter='Radxa'}" />
-                    <RadioButton Grid.Column="0" Grid.Row="2" GroupName="DeviceType" Content="NVR Hi3536"
-                                 IsChecked="{Binding SelectedDeviceType, Converter={StaticResource DeviceTypeConverter}, ConverterParameter='NVR'}" />
-
-                </Grid>
-
+        <!-- Footer: IP Address, Password, Connect, Save and Reboot, Reboot -->
+        
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto,*,*,*" RowDefinitions="Auto,Auto" Margin="10">
+            <!-- IP Address Field -->
+            <Grid ColumnDefinitions="Auto,Auto, Auto,Auto" RowDefinitions="Auto">
+                <!-- IP Address Label and Input -->
+                <TextBlock Text="IP Address:" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Margin="5"/>
+                <TextBox Text="{Binding IpAddress}" Width="120" Grid.Row="0" Grid.Column="1" Margin="5"/>
+    
+                <!-- Password Label and Input -->
+                <TextBlock Text="Password:" VerticalAlignment="Center" Grid.Row="0" Grid.Column="2" Margin="5"/>
+                <TextBox Text="{Binding Password}"  Width="200" Grid.Row="0" Grid.Column="3" Margin="5"/>
             </Grid>
-
-
-        </Border>
-
-        <Border Grid.Column="0" Grid.Row="2" 
-                
-                BorderBrush="Black"
-                BorderThickness="2"
-                CornerRadius="5"
-                Padding="5" Margin="10">
-            <Grid Grid.Row="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <ScrollViewer x:Name="LogsScrollViewer" 
-                              VerticalScrollBarVisibility="Visible" 
-                              HorizontalScrollBarVisibility="Visible" 
-                              VerticalAlignment="Stretch" 
-                              HorizontalAlignment="Stretch">
-                    <ListBox ItemsSource="{Binding LogMessages}" 
-                             Height="160"  
-                             Padding="2" 
-                             >
-                    </ListBox>
-                </ScrollViewer>
+            
+            <Grid Grid.Row="1"  ColumnDefinitions="Auto,Auto, Auto,Auto" RowDefinitions="Auto,Auto">
+                <!-- Connect Button -->
+                <Button Grid.Row="0" Grid.Column="0" IsEnabled="{Binding CanConnect }" Content="Connect" Command="{Binding SaveAndConnectCommand}" />
+                <!-- Save and Reboot Button -->
+                <Button Grid.Row="0" Grid.Column="1" IsEnabled="{Binding CanConnect }" Content="Save and Reboot" />
+                <!-- Reboot Button -->
+                <Button Grid.Row="0" Grid.Column="2" IsEnabled="{Binding CanConnect }" Content="Reboot" />
             </Grid>
-        </Border>
-        <TextBlock Grid.Row="3" HorizontalAlignment="Center">OpenIPC FPV 2024</TextBlock>
+                
+            
+
+            
+        </Grid>
+
+
+        <!-- Radio Buttons for device selection -->
+        <!-- <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Row="2" Margin="10"> -->
+        <!--     <RadioButton Content="OpenIPC Camera" Margin="10,0,0,0" IsChecked="{Binding SelectedDeviceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static models:DeviceType.Camera}}"/> -->
+        <!--     <RadioButton Content="NVR Hi3536" Margin="10,0,0,0" IsChecked="{Binding SelectedDeviceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static models:DeviceType.NVR}}"/> -->
+        <!--     <RadioButton Content="Radxa Zero 3w (WFB-ng)" Margin="10,0,0,0" IsChecked="{Binding SelectedDeviceType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static models:DeviceType.Radxa}}"/> -->
+        <!-- </StackPanel> -->
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Row="2" Margin="10">
+            <RadioButton Content="OpenIPC Camera" Margin="10,0,0,0" IsChecked="{Binding SelectedDeviceType}"/>
+            <RadioButton Content="NVR Hi3536" Margin="10,0,0,0" IsChecked="{Binding SelectedDeviceType}"/>
+            <RadioButton Content="Radxa Zero 3w (WFB-ng)" Margin="10,0,0,0" IsChecked="{Binding SelectedDeviceType}"/>
+        </StackPanel>
+        
+        
+        
     </Grid>
-
 </Window>

@@ -1,0 +1,165 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenIPC_Config.ViewModels"
+             xmlns:viewModels="clr-namespace:OpenIPC_Config.ViewModels"
+             mc:Ignorable="d"
+             x:Class="OpenIPC_Config.Views.WfbSettingsView"
+             x:DataType="vm:WfbSettingsTabViewModel">
+    
+    <!-- Add styles and resources for this window -->
+    <UserControl.Styles>
+        
+        <Style Selector="TabItem">
+            <!-- Font size and weight -->
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+    
+            <!-- Padding inside the tab item -->
+            <Setter Property="Padding" Value="5,5,5,5" />
+    
+            <!-- Background and foreground colors -->
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Foreground" Value="Black" />
+    
+            <!-- Border and corner radius -->
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="5" />
+    
+            
+        </Style>
+        
+        <!-- Hover effect -->
+        <Style Selector="TabItem:hover">
+            <Setter Property="Background" Value="DarkGray" />
+        </Style>
+        
+        <!-- Style for selected TabItem -->
+        <Style Selector="TabItem:selected">
+            <Setter Property="Background" Value="Orange" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Orange" />
+        </Style>
+
+        
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+        </Style>
+        
+        <!-- <Style Selector="ComboBox"> -->
+        <!--     <Setter Property="Padding" Value="5"></Setter> -->
+        <!--     <Setter Property="Margin" Value="1" /> -->
+        <!--     <Setter Property="MinHeight" Value="10" /> -->
+        <!-- </Style> -->
+        
+        <Style Selector="Label">
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="5"></Setter>
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+        </Style>
+        
+        <Style Selector="Button">
+            <!-- Internal padding of the button content -->
+            <Setter Property="Padding" Value="5,3" />
+    
+            <!-- Border properties -->
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Black" />
+    
+            <!-- Background color -->
+            <Setter Property="Background" Value="Orange" />
+    
+            <!-- External margin to create space between buttons and other elements -->
+            <Setter Property="Margin" Value="2" />
+    
+            <!-- Minimum height and width to prevent buttons from becoming too small -->
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="MinWidth" Value="80" />
+    
+            <!-- Corner radius for rounded corners -->
+            <Setter Property="CornerRadius" Value="5" />
+    
+            <!-- Text color and alignment -->
+            <Setter Property="Foreground" Value="Black" />
+    
+            <!-- Center the text horizontally and vertically inside the button -->
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <!-- -->
+            <!-- Hover effect to change the background when hovered -->
+            <!-- <Style Selector="Button:hover"> -->
+            <!--     <Setter Property="Background" Value="DarkOrange" /> -->
+            <!-- </Style> -->
+        </Style>
+
+        
+        <Style Selector="TabItem">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+            <Setter Property="MinWidth" Value="10" />
+        </Style>
+    </UserControl.Styles>
+    
+    
+    <StackPanel Orientation="Vertical" Spacing="5">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            
+            
+            <Label Grid.Column="0" Grid.Row="0" Width="250" Content="5.8GHz Frequency"/>
+            <Label Grid.Column="0" Grid.Row="1" Width="250" Content="5.8GHz TX Power"/> 
+            <Label Grid.Column="0" Grid.Row="2" Width="250" Content="2.4GHz Frequency"/>
+            <Label Grid.Column="0" Grid.Row="3" Width="250" Content="2.4GHz TX Power" />
+            <Label Grid.Column="0" Grid.Row="4" Width="250" Content="MCS INDEX"/>
+            <Label Grid.Column="0" Grid.Row="5" Width="250" Content="STBC"/>
+            <Label Grid.Column="0" Grid.Row="6" Width="250" Content="LDPC"/>
+            <Label Grid.Column="0" Grid.Row="7" Width="250" Content="FEC K"/>
+            <Label Grid.Column="0" Grid.Row="8" Width="250" Content="FEC N"/>
+            
+            <ComboBox Grid.Column="1" Grid.Row="0" Width="250" ToolTip.Tip="Select 5.8GHz Frequency" ItemsSource="{Binding Frequencies58GHz}" />
+            
+            <ComboBox Grid.Column="1" Grid.Row="1" Width="250" ToolTip.Tip="Select 5.8GHz TX Power" 
+                      ItemsSource="{Binding Power58GHz}" 
+                      SelectedItem="{Binding SelectedPower, Mode=TwoWay}" />
+            
+            <ComboBox Grid.Column="1" Grid.Row="2" Width="250" ToolTip.Tip="Select 2.4GHz Frequency"  ItemsSource="{Binding Frequencies24GHz}"/>
+            <ComboBox Grid.Column="1" Grid.Row="3" Width="250" ToolTip.Tip="Select 2.4GHz TX Power"  ItemsSource="{Binding Power24GHz}"/>
+            <ComboBox Grid.Column="1" Grid.Row="4" Width="250" ToolTip.Tip="Select MCS INDEX"  ItemsSource="{Binding MCSIndex}"/>
+            <ComboBox Grid.Column="1" Grid.Row="5" Width="250" ToolTip.Tip="Select STBC"  ItemsSource="{Binding STBC}"/>
+            <ComboBox Grid.Column="1" Grid.Row="6" Width="250" ToolTip.Tip="Select LDPC"  ItemsSource="{Binding LDPC}"/>
+            <ComboBox Grid.Column="1" Grid.Row="7" Width="250" ToolTip.Tip="Select FEC K"  ItemsSource="{Binding FecK}"/>
+            <ComboBox Grid.Column="1" Grid.Row="8" Width="250" ToolTip.Tip="Select FEC N"  ItemsSource="{Binding FecN}"/>
+        </Grid>
+        
+        <!-- Restart WFB Button -->
+        <Button HorizontalAlignment="Left" Grid.Row="9" Content="Restart WFB" Command="{Binding RestartWfbCommand}" />
+        
+    </StackPanel>
+</UserControl>

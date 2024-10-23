@@ -50,7 +50,7 @@ public class Logger
         Console.WriteLine(formattedMessage);
         
         // Notify the ViewModel (if you can access it)
-        MainWindowViewModel.Instance?.AddLogMessage(formattedMessage); // Ensure you have a way to access the ViewModel
+        //MainWindowViewModel.Instance?.(formattedMessage); // Ensure you have a way to access the ViewModel
     }
 
     

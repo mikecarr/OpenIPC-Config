@@ -1,4 +1,4 @@
-namespace OpenIPC_Config;
+namespace OpenIPC_Config.Models;
 
 public static class Majestic
 {

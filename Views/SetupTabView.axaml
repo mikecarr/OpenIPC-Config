@@ -1,0 +1,70 @@
+<UserControl x:Class="OpenIPC_Config.Views.SetupTabView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenIPC_Config.ViewModels"
+             mc:Ignorable="d"
+             x:DataType="vm:SetupTabViewModel">
+    
+    <!-- Main Content -->
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Column: Buttons -->
+        <StackPanel Orientation="Vertical" Grid.Column="0" Spacing="5">
+            <!-- <Button Content="Script Files Backup" Click="{Binding ScriptFilesBackupCommand}" /> -->
+            <!-- <Button Content="Script Files Restore" Command="{Binding ScriptFilesRestoreCommand}" /> -->
+            <!-- <Button Content="Sensor Bin Backup" Command="{Binding SensorBinBackupCommand}" /> -->
+            <!-- <Button Content="Sensor Driver Backup" Command="{Binding SensorDriverBackupCommand}" /> -->
+            <!-- <Button Content="Sensor Bin Update" Command="{Binding SensorBinUpdateCommand}" /> -->
+            <!-- <Button Content="Sensor Driver Update" Command="{Binding SensorDriverUpdateCommand}" /> -->
+            <Button Content="Script Files Backup" Command="{Binding ScriptFilesBackupCommand}" />
+            <Button Content="Script Files Restore" Command="{Binding ScriptFilesRestoreCommand}" />
+            <!-- <Button Content="Sensor Bin Backup" Command="{Binding SensorBinBackupCommand}" /> -->
+            <!-- <Button Content="Sensor Driver Backup" Command="{Binding SensorDriverBackupCommand}" /> -->
+            <!-- <Button Content="Sensor Bin Update" Command="{Binding SensorBinUpdateCommand}" /> -->
+            <!-- <Button Content="Sensor Driver Update" Command="{Binding SensorDriverUpdateCommand}" /> -->
+            <!-- <Button Content="Scan Network" Command="{Binding ScanCommand}" /> -->
+            
+            <!-- Select Sensor Dropdown -->
+            <ComboBox Width="200" PlaceholderText="Select Sensor" />
+        </StackPanel>
+
+        <!-- Right Column: IP Address and additional options -->
+        <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="10" Margin="20,0,0,0">
+            <TextBlock Text="Available IP Addresses on your network:" />
+
+            <!-- IP Address input with SCAN button -->
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBox Width="150" Text="192.168.0." />
+                <Button Content="SCAN" Width="60" />
+            </StackPanel>
+
+            <!-- <Button Content="Firmware Update" Command="{Binding FirmwareUpdateCommand}" /> -->
+            <!-- ~1~ <Button Content="Ruby" Command="{Binding RubyCommand}" /> @1@ -->
+            <!-- <Button Content="Send Drone Key" Command="{Binding SendDroneKeyCommand}" /> -->
+            <!-- <Button Content="Receive Drone Key" Command="{Binding ReceiveDroneKeyCommand}" /> -->
+            <!-- <Button Content="Reset Camera" Command="{Binding ResetCameraCommand}" /> -->
+            <!-- <Button Content="Offline Update" Command="{Binding OfflineUpdateCommand}" /> -->
+
+            
+            <!-- <Button Content="Firmware Update" /> -->
+            <!-- <Button Content="Ruby" /> -->
+            <!-- <Button Content="Send drone.key" /> -->
+            <!-- <Button Content="Receive drone.key" /> -->
+            <!-- <Button Content="Reset Camera" /> -->
+            <!-- <Button Content="Offline Update" /> -->
+
+            <!-- Version Selection -->
+            <TextBlock Text="Version:" />
+            <ComboBox Width="200" PlaceholderText="Select OpenIPC Version" />
+
+            <!-- Steps Text -->
+            <TextBlock Text="Step 1: Select which VRX to use..." />
+        </StackPanel>
+    </Grid>
+</UserControl>

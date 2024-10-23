@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OpenIPC_Config.Views.VRXTabView">
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Side: ComboBoxes -->
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" Spacing="5">
+            <ComboBox Width="250" PlaceholderText="Select Resolution" />
+            <ComboBox Width="250" PlaceholderText="Select Codec" />
+            <ComboBox Width="250" PlaceholderText="Select OSD" />
+            <ComboBox Width="250" PlaceholderText="Select Format" />
+        </StackPanel>
+
+        <!-- Custom Resolution Settings -->
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center"
+                    Margin="0,10,0,0">
+            <TextBlock Text="Custom X" VerticalAlignment="Center" />
+            <TextBox Text="800" Width="50" />
+
+            <TextBlock Text="Custom Y" VerticalAlignment="Center" />
+            <TextBox Text="600" Width="50" />
+        </StackPanel>
+
+        <!-- Custom Resolution Checkbox -->
+        <CheckBox Grid.Row="2" Grid.Column="0" Content="Custom Resolution" Margin="0,10" VerticalAlignment="Center" />
+
+        <!-- Warning Message -->
+        <TextBlock Grid.Row="3" Grid.Column="0"
+                   Text="Be careful what you are changing in the fields below. It could break the VRX."
+                   FontSize="12" Margin="0,10,0,0" />
+
+        <!-- Additional Input Fields -->
+        <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal" Spacing="10" Margin="0,10">
+            <TextBox Width="150" />
+            <TextBox Width="150" />
+        </StackPanel>
+    </Grid>
+
+</UserControl>

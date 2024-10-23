@@ -1,4 +1,4 @@
-namespace OpenIPC_Config;
+namespace OpenIPC_Config.Models;
 
 // This class contains strings of commands that can be executed on an OpenIPC camera 
 public static class DeviceCommands

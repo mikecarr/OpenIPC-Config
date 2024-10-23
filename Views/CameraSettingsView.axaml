@@ -1,0 +1,172 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenIPC_Config.ViewModels"
+             xmlns:viewModels="clr-namespace:OpenIPC_Config.ViewModels"
+             mc:Ignorable="d"
+             x:Class="OpenIPC_Config.Views.CameraSettingsView"
+             x:DataType="vm:CameraSettingsTabViewModel">
+
+    <UserControl.DataContext>
+        <vm:CameraSettingsTabViewModel />
+    </UserControl.DataContext>
+
+    <!-- Add styles and resources for this window -->
+    <UserControl.Styles>
+
+        <Style Selector="TabItem">
+            <!-- Font size and weight -->
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+
+            <!-- Padding inside the tab item -->
+            <Setter Property="Padding" Value="5,5,5,5" />
+
+            <!-- Background and foreground colors -->
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Foreground" Value="Black" />
+
+            <!-- Border and corner radius -->
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="5" />
+
+
+        </Style>
+
+        <!-- Hover effect -->
+        <Style Selector="TabItem:hover">
+            <Setter Property="Background" Value="DarkGray" />
+        </Style>
+
+        <!-- Style for selected TabItem -->
+        <Style Selector="TabItem:selected">
+            <Setter Property="Background" Value="Orange" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Orange" />
+        </Style>
+
+
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+        </Style>
+
+        <!-- <Style Selector="ComboBox"> -->
+        <!--     <Setter Property="Padding" Value="5"></Setter> -->
+        <!--     <Setter Property="Margin" Value="1" /> -->
+        <!--     <Setter Property="MinHeight" Value="10" /> -->
+        <!-- </Style> -->
+
+        <Style Selector="Label">
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="5"></Setter>
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+        </Style>
+
+        <Style Selector="Button">
+            <!-- Internal padding of the button content -->
+            <Setter Property="Padding" Value="5,3" />
+
+            <!-- Border properties -->
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Black" />
+
+            <!-- Background color -->
+            <Setter Property="Background" Value="Orange" />
+
+            <!-- External margin to create space between buttons and other elements -->
+            <Setter Property="Margin" Value="2" />
+
+            <!-- Minimum height and width to prevent buttons from becoming too small -->
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="MinWidth" Value="80" />
+
+            <!-- Corner radius for rounded corners -->
+            <Setter Property="CornerRadius" Value="5" />
+
+            <!-- Text color and alignment -->
+            <Setter Property="Foreground" Value="Black" />
+
+            <!-- Center the text horizontally and vertically inside the button -->
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <!-- -->
+            <!-- Hover effect to change the background when hovered -->
+            <!-- <Style Selector="Button:hover"> -->
+            <!--     <Setter Property="Background" Value="DarkOrange" /> -->
+            <!-- </Style> -->
+        </Style>
+
+
+        <Style Selector="TabItem">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="MinHeight" Value="10" />
+            <Setter Property="MinWidth" Value="10" />
+        </Style>
+    </UserControl.Styles>
+
+
+    <StackPanel Orientation="Vertical" Spacing="5" Margin="10">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Width="250" Content="Resolution" ToolTip.Tip="Select Resolution" />
+            <Label Grid.Row="1" Grid.Column="0" Width="250" Content="FPS" ToolTip.Tip="Select FPS" />
+            <Label Grid.Row="2" Grid.Column="0" Width="250" Content="Codec" ToolTip.Tip="Select Codec" />
+            <Label Grid.Row="3" Grid.Column="0" Width="250" Content="Bitrate" ToolTip.Tip="Select Bitrate" />
+            <Label Grid.Row="4" Grid.Column="0" Width="250" Content="Exposure" ToolTip.Tip="Select Exposure" />
+            <Label Grid.Row="5" Grid.Column="0" Width="250" Content="Contrast" ToolTip.Tip="Select Contrast" />
+            <Label Grid.Row="6" Grid.Column="0" Width="250" Content="Hue" ToolTip.Tip="Select Hue" />
+            <Label Grid.Row="7" Grid.Column="0" Width="250" Content="Saturation" ToolTip.Tip="Select Saturation" />
+            <Label Grid.Row="8" Grid.Column="0" Width="250" Content="Luminance" ToolTip.Tip="Select Luminance" />
+            <Label Grid.Row="9" Grid.Column="0" Width="250" Content="Flip" ToolTip.Tip="Select Flip" />
+            <Label Grid.Row="10" Grid.Column="0" Width="250" Content="Mirror" ToolTip.Tip="Select Mirror" />
+
+            <ComboBox Grid.Row="0" Grid.Column="1" Width="250" ItemsSource="{Binding Resolution}" />
+            <ComboBox Grid.Row="1" Grid.Column="1" Width="250" ItemsSource="{Binding FPS}" />
+            <ComboBox Grid.Row="2" Grid.Column="1" Width="250" ItemsSource="{Binding Codec}" />
+            <ComboBox Grid.Row="3" Grid.Column="1" Width="250" ItemsSource="{Binding Bitrate}" />
+            <ComboBox Grid.Row="4" Grid.Column="1" Width="250" ItemsSource="{Binding Exposure}" />
+            <ComboBox Grid.Row="5" Grid.Column="1" Width="250" ItemsSource="{Binding Contrast}" />
+            <ComboBox Grid.Row="6" Grid.Column="1" Width="250" ItemsSource="{Binding Hue}" />
+            <ComboBox Grid.Row="7" Grid.Column="1" Width="250" ItemsSource="{Binding Saturation}" />
+            <ComboBox Grid.Row="8" Grid.Column="1" Width="250" ItemsSource="{Binding Luminance}" />
+            <ComboBox Grid.Row="9" Grid.Column="1" Width="250" ItemsSource="{Binding Flip}" />
+            <ComboBox Grid.Row="10" Grid.Column="1" Width="250" ItemsSource="{Binding Mirror}" />
+        </Grid>
+        <!-- Restart Majestic Button -->
+        <Button Content="Restart Majestic" HorizontalAlignment="Left" Margin="10" />
+
+        <!-- Warning Label -->
+        <TextBlock Text="Be careful what you enter here" HorizontalAlignment="Right" FontSize="12" />
+
+    </StackPanel>
+</UserControl>

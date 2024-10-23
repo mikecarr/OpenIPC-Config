@@ -2,29 +2,28 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using OpenIPC_Config.ViewModels;
+using OpenIPC_Config.Models;
 using Renci.SshNet;
 
 namespace OpenIPC_Config
 {
     public class SshClientService : ISshClientService
     {
-        public async Task ExecuteCommandAsync(string host, string username, string password, string command)
+        public  async Task ExecuteCommandAsync(DeviceConfig deviceConfig, string command)
         {
-            Logger.Instance.Log($"Executing command: '{command}' on {host}.");
+            Logger.Instance.Log($"Executing command: '{command}' on {deviceConfig.IpAddress}.");
 
-            using (var client = new SshClient(host, username, password))
+            using (var client = new SshClient(deviceConfig.IpAddress, deviceConfig.Username, deviceConfig.Password))
             {
                 try
                 {
                     client.Connect();
                     var result = client.RunCommand(command);
-                    Logger.Instance.Log($"Command executed successfully. Result: {result.Result}");
-                    MainWindowViewModel.Instance?.AddLogMessage($"Command executed successfully. Result: {result.Result}");
+                    //Logger.Instance.Log($"Command executed successfully. Result: {result.Result}");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Instance.Log($"Error executing command: {ex.Message}");
+                    //Logger.Instance.Log($"Error executing command: {ex.Message}");
                 }
                 finally
                 {
@@ -33,14 +32,13 @@ namespace OpenIPC_Config
             }
         }
 
-        public async Task UploadFileAsync(string host, string username, string password,  string remotePath, string fileContent)
+        public async Task UploadFileAsync(DeviceConfig deviceConfig, string remotePath, string fileContent)
         {
-            Logger.Instance.Log($"Uploading content to '{remotePath}' on {host}.");
-            
+            Logger.Instance.Log($"Uploading content to '{remotePath}' on {deviceConfig.IpAddress}.");
 
             await Task.Run(() =>
             {
-                using (var client = new SftpClient(host, username, password))
+                using (var client = new SftpClient(deviceConfig.IpAddress, deviceConfig.Username, deviceConfig.Password))
                 {
                     try
                     {
@@ -66,15 +64,15 @@ namespace OpenIPC_Config
         }
 
 
-        public async Task<string> DownloadFileAsync(string host, string username, string password, string remotePath)
+        public async Task<string> DownloadFileAsync(DeviceConfig deviceConfig, string remotePath)
         {
-            Logger.Instance.Log($"Downloading file from '{remotePath}' on {host}.");
+            Logger.Instance.Log($"Downloading file from '{remotePath}' on {deviceConfig.IpAddress}.");
 
             string fileContent = string.Empty;
 
             await Task.Run(() =>
             {
-                using (var client = new SftpClient(host, username, password))
+                using (var client = new SftpClient(deviceConfig.IpAddress, deviceConfig.Username, deviceConfig.Password))
                 {
                     try
                     {

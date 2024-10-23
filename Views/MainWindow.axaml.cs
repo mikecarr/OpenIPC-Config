@@ -1,23 +1,32 @@
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Diagnostics;
 using Avalonia.Interactivity;
+using OpenIPC_Config.Services;
 using OpenIPC_Config.ViewModels;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 
 namespace OpenIPC_Config.Views;
 
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    public MainWindow(ViewModelLocator viewModelLocator)
     {
         InitializeComponent();
-        var viewModel = new MainWindowViewModel();
+        
+        var settings = SettingsManager.LoadSettings();
+        
+        var viewModel = new MainWindowViewModel(settings, viewModelLocator.EventAggregator);
         DataContext = viewModel; // Set the DataContext
+        
+        // Attach the developer tools
+        this.AttachDevTools();
         
         this.WindowState = WindowState.Normal; // Ensure the window is normal
         this.Activate(); // Activate the window
     }
+
+    
 
     private async void btnRestartWFB_Click(object? sender, RoutedEventArgs e)
     {
