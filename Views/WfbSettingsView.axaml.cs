@@ -24,8 +24,7 @@ namespace OpenIPC_Config.Views
         public WfbSettingsView()
         {
             InitializeComponent();
-            //DataContext = new WfbSettingsTabViewModel(new EventAggregator());
-            //DataContext = ViewModelLocator.Instance.Resolve<WfbSettingsTabViewModel>();
+            
             DataContext = ViewModelLocator.Instance.WfbSettingsTabViewModel;
         }
     }

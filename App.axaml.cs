@@ -32,11 +32,7 @@ public partial class App : Application
             
             // Create a single instance of the EventAggregator
             _eventAggregator = new EventAggregator();
-            _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>().Subscribe((message) =>
-            {
-                // Handle the event here
-                System.Diagnostics.Debug.WriteLine("Received event: " + message);
-            });
+            
             
             // Create the MainWindow and set its DataContext with loaded settings
             desktop.MainWindow = new MainWindow(new ViewModelLocator(_eventAggregator))

@@ -8,9 +8,6 @@
              x:Class="OpenIPC_Config.Views.CameraSettingsView"
              x:DataType="vm:CameraSettingsTabViewModel">
 
-    <UserControl.DataContext>
-        <vm:CameraSettingsTabViewModel />
-    </UserControl.DataContext>
 
     <!-- Add styles and resources for this window -->
     <UserControl.Styles>
@@ -150,17 +147,30 @@
             <Label Grid.Row="9" Grid.Column="0" Width="250" Content="Flip" ToolTip.Tip="Select Flip" />
             <Label Grid.Row="10" Grid.Column="0" Width="250" Content="Mirror" ToolTip.Tip="Select Mirror" />
 
-            <ComboBox Grid.Row="0" Grid.Column="1" Width="250" ItemsSource="{Binding Resolution}" />
-            <ComboBox Grid.Row="1" Grid.Column="1" Width="250" ItemsSource="{Binding FPS}" />
-            <ComboBox Grid.Row="2" Grid.Column="1" Width="250" ItemsSource="{Binding Codec}" />
-            <ComboBox Grid.Row="3" Grid.Column="1" Width="250" ItemsSource="{Binding Bitrate}" />
-            <ComboBox Grid.Row="4" Grid.Column="1" Width="250" ItemsSource="{Binding Exposure}" />
-            <ComboBox Grid.Row="5" Grid.Column="1" Width="250" ItemsSource="{Binding Contrast}" />
-            <ComboBox Grid.Row="6" Grid.Column="1" Width="250" ItemsSource="{Binding Hue}" />
-            <ComboBox Grid.Row="7" Grid.Column="1" Width="250" ItemsSource="{Binding Saturation}" />
-            <ComboBox Grid.Row="8" Grid.Column="1" Width="250" ItemsSource="{Binding Luminance}" />
-            <ComboBox Grid.Row="9" Grid.Column="1" Width="250" ItemsSource="{Binding Flip}" />
-            <ComboBox Grid.Row="10" Grid.Column="1" Width="250" ItemsSource="{Binding Mirror}" />
+            <ComboBox Grid.Row="0" Grid.Column="1" Width="250" 
+                      ItemsSource="{Binding Resolution}" 
+                      SelectedItem="{Binding SelectedResolution, Mode=TwoWay}" />
+            
+            <ComboBox Grid.Row="1" Grid.Column="1" Width="250" ItemsSource="{Binding FPS}" 
+                      SelectedItem="{Binding SelectedFps, Mode=TwoWay}" />
+            <ComboBox Grid.Row="2" Grid.Column="1" Width="250" ItemsSource="{Binding Codec}" 
+                      SelectedItem="{Binding SelectedCodec, Mode=TwoWay}" />
+            <ComboBox Grid.Row="3" Grid.Column="1" Width="250" ItemsSource="{Binding Bitrate}" 
+                      SelectedItem="{Binding SelectedBitrate, Mode=TwoWay}" />
+            <ComboBox Grid.Row="4" Grid.Column="1" Width="250" ItemsSource="{Binding Exposure}" 
+                      SelectedItem="{Binding SelectedExposure, Mode=TwoWay}" />
+            <ComboBox Grid.Row="5" Grid.Column="1" Width="250" ItemsSource="{Binding Contrast}" 
+                      SelectedItem="{Binding SelectedContrast, Mode=TwoWay}" />
+            <ComboBox Grid.Row="6" Grid.Column="1" Width="250" ItemsSource="{Binding Hue}" 
+                      SelectedItem="{Binding SelectedHue, Mode=TwoWay}" />
+            <ComboBox Grid.Row="7" Grid.Column="1" Width="250" ItemsSource="{Binding Saturation}" 
+                      SelectedItem="{Binding SelectedSaturation, Mode=TwoWay}" />
+            <ComboBox Grid.Row="8" Grid.Column="1" Width="250" ItemsSource="{Binding Luminance}" 
+                      SelectedItem="{Binding SelectedLuminance, Mode=TwoWay}" />
+            <ComboBox Grid.Row="9" Grid.Column="1" Width="250" ItemsSource="{Binding Flip}" 
+                      SelectedItem="{Binding SelectedFlip, Mode=TwoWay}" />
+            <ComboBox Grid.Row="10" Grid.Column="1" Width="250" ItemsSource="{Binding Mirror}" 
+                      SelectedItem="{Binding SelectedMirror, Mode=TwoWay}"/>
         </Grid>
         <!-- Restart Majestic Button -->
         <Button Content="Restart Majestic" HorizontalAlignment="Left" Margin="10" />

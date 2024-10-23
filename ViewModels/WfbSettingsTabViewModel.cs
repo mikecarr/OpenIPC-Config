@@ -10,6 +10,7 @@ using OpenIPC_Config.Models;
 using OpenIPC_Config.Services;
 using Prism.Events;
 using ReactiveUI;
+using System.Text.RegularExpressions;
 
 namespace OpenIPC_Config.ViewModels;
 
@@ -18,7 +19,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
     private string _wfbConfContent;
     private readonly MainWindowViewModel _mainWindowViewModel;
     
-    
+    private readonly ISshClientService _sshClientService;
 
     private IEventAggregator _eventAggregator;
     
@@ -33,6 +34,10 @@ public class WfbSettingsTabViewModel : ReactiveObject
     //         this.RaiseAndSetIfChanged(ref _canConnect, value);
     //     }
     // }
+    
+    private DeviceConfig _deviceConfig;
+    
+    
     private bool _canConnect;
 
     public bool CanConnect
@@ -53,6 +58,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
             ParseWfbConfContent();
         }
     }
+    
     
     private ObservableCollection<int> _power58GHz;
     public ObservableCollection<int> Power58GHz
@@ -85,6 +91,17 @@ public class WfbSettingsTabViewModel : ReactiveObject
         {
             this.RaiseAndSetIfChanged(ref _selectedPower24GHz, value);
             Logger.Instance.Log($"SelectedPower (2.4) updated to {value}");
+        }
+    }
+    
+    private int _selectedChannel;
+    public int SelectedChannel
+    {
+        get => _selectedChannel;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedChannel, value);
+            Logger.Instance.Log($"SelectedChannel updated to {value}");
         }
     }
     
@@ -204,6 +221,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
                         if (int.TryParse(value, out int frequency))
                         {
                             string frequencyString;
+                            
                             if (_58frequencyMapping.TryGetValue(frequency, out frequencyString))
                             {
                                 SelectedFrequency58String = frequencyString;
@@ -303,6 +321,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
                     case Wfb.Channel:
                         if (int.TryParse(value, out int channel))
                         {
+                            SelectedChannel = channel;
                             if (_58frequencyMapping.TryGetValue(channel, out string frequency58String))
                             {
                                 SelectedFrequency58String = frequency58String;
@@ -397,7 +416,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
     {
         WfbConfContent = message.Content;
     }
-    public WfbSettingsTabViewModel(IEventAggregator eventAggregator, MainWindowViewModel mainWindowViewModel)
+    public WfbSettingsTabViewModel(DeviceConfig deviceConfig,IEventAggregator eventAggregator, MainWindowViewModel mainWindowViewModel)
     {
         InitializeCollections();
     
@@ -407,12 +426,13 @@ public class WfbSettingsTabViewModel : ReactiveObject
         _mainWindowViewModel = mainWindowViewModel;
         
         RestartWfbCommand = new RelayCommand(() => RestartWfb(_mainWindowViewModel));
+        
+        _deviceConfig = deviceConfig;
+        _sshClientService = new SshClientService();
     }
     private void OnWfbConfContentUpdated(WfbConfContentUpdatedMessage message)
     {
         WfbConfContent = message.Content;
-        
-        //CanConnect = true;
         
         ParseWfbConfContent();
     }
@@ -424,24 +444,112 @@ public class WfbSettingsTabViewModel : ReactiveObject
         Frequencies58GHz = new ObservableCollection<string>(_58frequencyMapping.Values);
         Frequencies24GHz = new ObservableCollection<string>(_24frequencyMapping.Values);
         
-        Power58GHz = new ObservableCollection<int> { 1, 5, 10, 15, 20, 25 };
-        Power24GHz = new ObservableCollection<int> { 20, 25, 30, 35, 40 };
+        Power58GHz = new ObservableCollection<int> { 1, 5, 10, 15, 20, 25, 30 };
+        Power24GHz = new ObservableCollection<int> { 1,20, 25, 30, 35, 40 };
         MCSIndex = new ObservableCollection<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
         STBC = new ObservableCollection<int> { 0, 1 };
         LDPC = new ObservableCollection<int> { 0, 1 };
         FecK = new ObservableCollection<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
         FecN = new ObservableCollection<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 
-        _canConnect = false;
+        CanConnect = false;
 
 
     }
 
-    private static void RestartWfb(MainWindowViewModel mainWindowViewModel)
+    private void RestartWfb(MainWindowViewModel mainWindowViewModel)
     {
         Logger.Instance.Log("*** TODO : RestartWfbCommand executed");
         // Access the CanConnect property from the MainWindowViewModel instance
         //_canConnect = mainWindowViewModel.CanConnect;
+        // Get the current values from the controls
+        string newFrequency58 = SelectedFrequency58String;
+        string newFrequency24 = SelectedFrequency24String;
+
+        int newPower58 = SelectedPower;
+        int newPower24 = SelectedPower24GHz;
+        int newMcsIndex = SelectedMcsIndex;
+        int newStbc = SelectedStbc;
+        int newLdpc = SelectedLdpc;
+        int newFecK = SelectedFecK;
+        int newFecN = SelectedFecN;
+        int newChannel = SelectedChannel;
+        
+        // Update WfbConfContent with the new values
+        string updatedWfbConfContent = UpdateWfbConfContent(
+            WfbConfContent,
+            newFrequency58,
+            newFrequency24,
+            newPower58,
+            newPower24,
+            newMcsIndex,
+            newStbc,
+            newLdpc,
+            newFecK,
+            newFecN,
+            newChannel
+        );
+        
+        WfbConfContent = updatedWfbConfContent;
+
+        Logger.Instance.Log($"Uploading new : {OpenIPC.WFB_CONF_FILE_LOC}");
+        _sshClientService.UploadFileAsync(_deviceConfig, OpenIPC.WFB_CONF_FILE_LOC, WfbConfContent);
+
+        Logger.Instance.Log($"Restarting Wfb"); 
+        _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.WfbRestartCommand);
+    
+        
+    }
+    
+    private string UpdateWfbConfContent(
+        string wfbConfContent,
+        string newFrequency58,
+        string newFrequency24,
+        int newPower58,
+        int newPower24,
+        int newMcsIndex,
+        int newStbc,
+        int newLdpc,
+        int newFecK,
+        int newFecN,
+        int newChannel
+    )
+    {
+        // Logic to update WfbConfContent with the new values
+        var lines = wfbConfContent.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        var regex = new Regex(@"(frequency|channel|driver_txpower_override|frequency24|txpower|mcsindex|stbc|ldpc|feck|fecN)=.*");
+        var updatedContent = regex.Replace(wfbConfContent, match =>
+        {
+            switch (match.Groups[1].Value)
+            {
+                case "frequency":
+                    // TODO: what should we do here?
+                    //return $"frequency={newFrequency58}";
+                case "channel":
+                    return $"channel={newChannel}";
+                case "frequency24":
+                    // TODO: what should we do here?
+                    //return $"frequency24={newFrequency24}";
+                case "driver_txpower_override":
+                    return $"driver_txpower_override={newPower58}";
+                case "txpower":
+                    return $"txpower={newPower24}";
+                case "mcsindex":
+                    return $"mcsindex={newMcsIndex}";
+                case "stbc":
+                    return $"stbc={newStbc}";
+                case "ldpc":
+                    return $"ldpc={newLdpc}";
+                case "feck":
+                    return $"feck={newFecK}";
+                case "fecN":
+                    return $"fecN={newFecN}";
+                default:
+                    return match.Value;
+            }
+        });
+        return updatedContent;
+        
     }
 
 

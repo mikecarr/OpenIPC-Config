@@ -234,61 +234,7 @@ public partial class MainWindowViewModel : ObservableObject
         Username = "root";
     }
 
-    // YAML parsing and updating methods (unchanged)
-    private void ParseYamlConfig(string content) { /* Your existing YAML parsing logic */ }
-    private void UpdateYamlNode(YamlMappingNode root, string keyPath, string newValue) { /* Your existing node update logic */ }
 
-    public async Task SaveRestartMajesticCommand()
-    {
-        Logger.Instance.Log("Preparing to Save Majestic file.");
-        var majesticYamlContent = await _sshClientService.DownloadFileAsync(_deviceConfig, OpenIPC.MAJESTIC_FILE_LOC);
-
-        try
-        {
-            var yamlStream = new YamlStream();
-            using (var reader = new StringReader(majesticYamlContent))
-            {
-                yamlStream.Load(reader);
-            }
-
-            var root = (YamlMappingNode)yamlStream.Documents[0].RootNode;
-
-            foreach (var update in _yamlConfig)
-            {
-                UpdateYamlNode(root, update.Key, update.Value);
-            }
-
-            string updatedFileContent;
-            using (var writer = new StringWriter())
-            {
-                yamlStream.Save(writer, false);
-                updatedFileContent = writer.ToString();
-            }
-
-            await _sshClientService.UploadFileAsync(_deviceConfig, OpenIPC.MAJESTIC_FILE_LOC, updatedFileContent);
-            await _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.MajesticStopCommand);
-            await Task.Delay(5000);
-            await _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.MajesticStartCommand);
-
-            Logger.Instance.Log("YAML file saved and majestic service restarted successfully.");
-        }
-        catch (Exception ex)
-        {
-            Logger.Instance.Log($"Failed to save YAML file: {ex.Message}");
-        }
-    }
-
-    public void UpdateYamlConfig(string key, string newValue)
-    {
-        if (_yamlConfig.ContainsKey(key))
-        {
-            _yamlConfig[key] = newValue;
-        }
-        else
-        {
-            _yamlConfig.Add(key, newValue);
-        }
-    }
 
     private void SaveAndConnect()
     {
@@ -307,6 +253,11 @@ public partial class MainWindowViewModel : ObservableObject
         // Publish a message to WfbSettingsTabViewModel
         _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>()
             .Publish(new WfbConfContentUpdatedMessage(wfbConfContent));
+        
+        String majesticContent = await _sshClientService.DownloadFileAsync(deviceConfig, OpenIPC.MAJESTIC_FILE_LOC);
+        // Publish a message to WfbSettingsTabViewModel
+        _eventAggregator.GetEvent<MajesticContentUpdatedEvent>()
+            .Publish(new MajesticContentUpdatedMessage(majesticContent));
         
 
     }

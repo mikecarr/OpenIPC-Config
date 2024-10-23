@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using OpenIPC_Config.ViewModels;
 
 namespace OpenIPC_Config.Views
 {
@@ -16,6 +17,7 @@ namespace OpenIPC_Config.Views
         public CameraSettingsView()
         {
             InitializeComponent();
+            DataContext = ViewModelLocator.Instance.CameraSettingsTabViewModel;
             
         }
     }
