@@ -1,5 +1,7 @@
 using System;
 using OpenIPC_Config.Messages;
+using OpenIPC_Config.Models;
+using OpenIPC_Config.Services;
 using OpenIPC_Config.ViewModels;
 using OpenIPC_Config.Views;
 using Prism.Events;
@@ -12,9 +14,10 @@ public class ViewModelLocator
     public static ViewModelLocator Instance { get; private set; }
     public static MessageViewModel MessageViewModel { get; private set; }
     
+    public MainWindowViewModel MainWindowViewModel { get; private set; }
     public WfbSettingsTabViewModel WfbSettingsTabViewModel { get; }
 
-
+    public IEventAggregator EventAggregator => _eventAggregator;
     private IEventAggregator _eventAggregator;
     
 
@@ -24,14 +27,18 @@ public class ViewModelLocator
         _eventAggregator = eventAggregator;
         
         MessageViewModel = new MessageViewModel(eventAggregator);
-        WfbSettingsTabViewModel = new WfbSettingsTabViewModel(eventAggregator);
+        var settings = SettingsManager.LoadSettings();
+        MainWindowViewModel = new MainWindowViewModel(settings, eventAggregator);
+        //MainWindowViewModel = new MainWindowViewModel(eventAggregator);
+        //WfbSettingsTabViewModel = new WfbSettingsTabViewModel(eventAggregator, (MainWindowViewModel)ViewModelLocator.Instance.MainWindowViewModel);
+        WfbSettingsTabViewModel = new WfbSettingsTabViewModel(eventAggregator, MainWindowViewModel);
         
         Instance = this;
 
         _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>().Subscribe(x 
-            => Console.WriteLine("Here"));
+            => Console.WriteLine("WfbConfContentUpdatedEvent event fired!"));
 
     }
     
-    public IEventAggregator EventAggregator => _eventAggregator;
+   
 }

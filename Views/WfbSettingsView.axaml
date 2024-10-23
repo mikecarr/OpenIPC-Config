@@ -31,6 +31,7 @@
             
         </Style>
         
+        
         <!-- Hover effect -->
         <Style Selector="TabItem:hover">
             <Setter Property="Background" Value="DarkGray" />
@@ -143,23 +144,56 @@
             <Label Grid.Column="0" Grid.Row="7" Width="250" Content="FEC K"/>
             <Label Grid.Column="0" Grid.Row="8" Width="250" Content="FEC N"/>
             
-            <ComboBox Grid.Column="1" Grid.Row="0" Width="250" ToolTip.Tip="Select 5.8GHz Frequency" ItemsSource="{Binding Frequencies58GHz}" />
+            <ComboBox Grid.Column="1" Grid.Row="0" Width="250" ToolTip.Tip="Select 5.8GHz Frequency" 
+                      ItemsSource="{Binding Frequencies58GHz}" 
+                      SelectedItem="{Binding SelectedFrequency58String, Mode=TwoWay}" />
+            
+            <ComboBox Grid.Column="1" Grid.Row="2" Width="250" ToolTip.Tip="Select 2.4GHz Frequency"  
+                      ItemsSource="{Binding Frequencies24GHz}"
+                      SelectedItem="{Binding SelectedFrequency24String, Mode=TwoWay}" />
             
             <ComboBox Grid.Column="1" Grid.Row="1" Width="250" ToolTip.Tip="Select 5.8GHz TX Power" 
                       ItemsSource="{Binding Power58GHz}" 
                       SelectedItem="{Binding SelectedPower, Mode=TwoWay}" />
             
-            <ComboBox Grid.Column="1" Grid.Row="2" Width="250" ToolTip.Tip="Select 2.4GHz Frequency"  ItemsSource="{Binding Frequencies24GHz}"/>
-            <ComboBox Grid.Column="1" Grid.Row="3" Width="250" ToolTip.Tip="Select 2.4GHz TX Power"  ItemsSource="{Binding Power24GHz}"/>
-            <ComboBox Grid.Column="1" Grid.Row="4" Width="250" ToolTip.Tip="Select MCS INDEX"  ItemsSource="{Binding MCSIndex}"/>
-            <ComboBox Grid.Column="1" Grid.Row="5" Width="250" ToolTip.Tip="Select STBC"  ItemsSource="{Binding STBC}"/>
-            <ComboBox Grid.Column="1" Grid.Row="6" Width="250" ToolTip.Tip="Select LDPC"  ItemsSource="{Binding LDPC}"/>
-            <ComboBox Grid.Column="1" Grid.Row="7" Width="250" ToolTip.Tip="Select FEC K"  ItemsSource="{Binding FecK}"/>
-            <ComboBox Grid.Column="1" Grid.Row="8" Width="250" ToolTip.Tip="Select FEC N"  ItemsSource="{Binding FecN}"/>
+            
+            <ComboBox Grid.Column="1" Grid.Row="3" Width="250" ToolTip.Tip="Select 2.4GHz TX Power"  
+                      ItemsSource="{Binding Power24GHz}"
+                      SelectedItem="{Binding SelectedPower24GHz, Mode=TwoWay}"/>
+            
+            <ComboBox Grid.Column="1" Grid.Row="4" Width="250" ToolTip.Tip="Select MCS INDEX"  
+                      ItemsSource="{Binding MCSIndex}"
+                      SelectedItem="{Binding SelectedMcsIndex, Mode=TwoWay}"/>
+            
+            <ComboBox Grid.Column="1" Grid.Row="5" Width="250" ToolTip.Tip="Select STBC"  
+                      ItemsSource="{Binding STBC}"
+                      SelectedItem="{Binding SelectedStbc, Mode=TwoWay}"/>
+            
+            <ComboBox Grid.Column="1" Grid.Row="6" Width="250" ToolTip.Tip="Select LDPC"  
+                      ItemsSource="{Binding LDPC}"
+                      SelectedItem="{Binding SelectedLdpc, Mode=TwoWay}"/>
+            
+            <ComboBox Grid.Column="1" Grid.Row="7" Width="250" ToolTip.Tip="Select FEC K"  
+                      ItemsSource="{Binding FecK}" 
+                      SelectedItem="{Binding SelectedFecK, Mode=TwoWay}"/>
+            <ComboBox Grid.Column="1" Grid.Row="8" Width="250" ToolTip.Tip="Select FEC N"  
+                      ItemsSource="{Binding FecN}"
+                      SelectedItem="{Binding SelectedFecN, Mode=TwoWay}"/>
         </Grid>
         
         <!-- Restart WFB Button -->
-        <Button HorizontalAlignment="Left" Grid.Row="9" Content="Restart WFB" Command="{Binding RestartWfbCommand}" />
+        <!-- <Button HorizontalAlignment="Left" Grid.Row="9" Content="Restart WFB" -->
+        <!--         Command="{Binding RestartWfbCommand}" -->
+        <!--         IsEnabled="{Binding MainWindowViewModel.CanConnect, Source={x:Static viewModels:ViewModelLocator.Instance}}"/> -->
+        <!-- <Button HorizontalAlignment="Left" Grid.Row="9" Content="Restart WFB" -->
+        <!--         Command="{Binding RestartWfbCommand}" -->
+        <!--         IsEnabled="{Binding MainWindowViewModel.CanConnect, Source={x:Static viewModels:ViewModelLocator.Instance}}"> -->
+        <!-- </Button> -->
+        
+        <Button HorizontalAlignment="Left" Grid.Row="9" Content="Restart WFB"
+                Command="{Binding RestartWfbCommand}" IsEnabled="{Binding CanConnect}"/>
+            
+        
         
     </StackPanel>
 </UserControl>

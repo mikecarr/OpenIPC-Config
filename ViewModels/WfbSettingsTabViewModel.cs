@@ -16,15 +16,40 @@ namespace OpenIPC_Config.ViewModels;
 public class WfbSettingsTabViewModel : ReactiveObject
 {
     private string _wfbConfContent;
+    private readonly MainWindowViewModel _mainWindowViewModel;
+    
+    
 
     private IEventAggregator _eventAggregator;
     
-    public string WfbConfContent
+    //public bool CanConnect { get; set; }
+
+    // private ObservableCollection<bool> _canConnect;
+    // public ObservableCollection<bool> CanConnect
+    // {
+    //     get => _canConnect;
+    //     set
+    //     {
+    //         this.RaiseAndSetIfChanged(ref _canConnect, value);
+    //     }
+    // }
+    private bool _canConnect;
+
+    public bool CanConnect
+    {
+        get => _canConnect;
+        set { this.RaiseAndSetIfChanged(ref _canConnect, value); 
+        Logger.Instance.Log($"CanConnect {value}");
+    }
+}
+
+    private string WfbConfContent
     {
         get => _wfbConfContent;
         set
         {
             this.RaiseAndSetIfChanged(ref _wfbConfContent, value);
+            CanConnect = true;
             ParseWfbConfContent();
         }
     }
@@ -47,10 +72,110 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedPower, value);
-            Console.WriteLine($"SelectedPower updated to {value}");
+            Logger.Instance.Log($"SelectedPower (5.8) updated to {value}");
         }
     }
     
+    
+    private int _selectedPower24GHz;
+    public int SelectedPower24GHz
+    {
+        get => _selectedPower24GHz;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedPower24GHz, value);
+            Logger.Instance.Log($"SelectedPower (2.4) updated to {value}");
+        }
+    }
+    
+    private int _selectedLdpc;
+    public int SelectedLdpc
+    {
+        get => _selectedLdpc;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedLdpc, value);
+            Logger.Instance.Log($"SelectedLdpc updated to {value}");
+        }
+    }
+    
+    private int _selectedStbc;
+    public int SelectedStbc
+    {
+        get => _selectedStbc;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedStbc, value);
+            Logger.Instance.Log($"SelectedStbc updated to {value}");
+        }
+    }
+    
+    private int _selectedMcsIndex;
+    public int SelectedMcsIndex
+    {
+        get => _selectedMcsIndex;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedMcsIndex, value);
+            Logger.Instance.Log($"SelectedMcsIndex updated to {value}");
+        }
+    }
+    
+    private int _selectedFecK;
+    public int SelectedFecK
+    {
+        get => _selectedFecK;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedFecK, value);
+            Logger.Instance.Log($"SelectedFecK updated to {value}");
+        }
+    }
+    
+    private int _selectedFecN;
+    public int SelectedFecN
+    {
+        get => _selectedFecN;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedFecN, value);
+            Logger.Instance.Log($"SelectedFecN updated to {value}");
+        }
+    }
+    
+    private string _selectedFrequency58String;
+    public string SelectedFrequency58String
+    {
+        get => _selectedFrequency58String;
+        set => this.RaiseAndSetIfChanged(ref _selectedFrequency58String, value);
+    }
+    
+    private string _selectedFrequency24String;
+    public string SelectedFrequency24String
+    {
+        get => _selectedFrequency58String;
+        set => this.RaiseAndSetIfChanged(ref _selectedFrequency24String, value);
+    }
+    private int _selectedFrequency58;
+    public int SelectedFrequency58
+    {
+        get => _selectedFrequency58;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedFrequency58, value);
+    
+            // Parse the selected frequency value
+            if (_58frequencyMapping.TryGetValue(value, out string frequency58String))
+            {
+                SelectedFrequency58String = frequency58String;
+            }
+            else
+            {
+                // Handle unknown frequency value
+            }
+        }
+    }
+
     // Method to parse the wfbConfContent
     private void ParseWfbConfContent()
     {
@@ -75,7 +200,25 @@ public class WfbSettingsTabViewModel : ReactiveObject
                 
                 switch(key)
                 {
-                    case "driver_txpower_override":
+                    case Wfb.Frequency:
+                        if (int.TryParse(value, out int frequency))
+                        {
+                            string frequencyString;
+                            if (_58frequencyMapping.TryGetValue(frequency, out frequencyString))
+                            {
+                                SelectedFrequency58String = frequencyString;
+                            }
+                            else if (_24frequencyMapping.TryGetValue(frequency, out frequencyString))
+                            {
+                                SelectedFrequency24String = frequencyString;
+                            }
+                            else
+                            {
+                                // Handle unknown frequency value
+                            }
+                        }
+                        break;
+                    case Wfb.DriverTxpowerOverride:
                         if (int.TryParse(value, out int parsedPower))
                         {
                             // Ensure the parsed power exists in the collection, or set a fallback
@@ -86,16 +229,105 @@ public class WfbSettingsTabViewModel : ReactiveObject
                             
                         }
                         break;
-                    
+                    case Wfb.Ldpc:
+                        if (int.TryParse(value, out int parsedLdpc))
+                        {
+                            // Ensure the parsed power exists in the collection, or set a fallback
+                            if (LDPC.Contains(parsedLdpc))
+                            {
+                                SelectedLdpc = parsedLdpc;
+                            }
+                            
+                        }
+                        break;
+                    case Wfb.Stbc:
+                        if (int.TryParse(value, out int parsedStbc))
+                        {
+                            // Ensure the parsed power exists in the collection, or set a fallback
+                            if (STBC.Contains(parsedStbc))
+                            {
+                                SelectedStbc = parsedStbc;
+                            }
+                            
+                        }
+                        break;
+                    case Wfb.Txpower:
+                        if (int.TryParse(value, out int parsedTxpower))
+                        {
+                            // Ensure the parsed power exists in the collection, or set a fallback
+                            if (Power24GHz.Contains(parsedTxpower))
+                            {
+                                SelectedPower24GHz = parsedTxpower;
+                            }
+                            else
+                            {
+                                Power24GHz.Add(parsedTxpower);
+                                SelectedPower24GHz = parsedTxpower;
+                            }
+                            
+                        }
+                        break;
+                    case Wfb.McsIndex:
+                        if (int.TryParse(value, out int parsedMcsIndex))
+                        {
+                            // Ensure the parsed power exists in the collection, or set a fallback
+                            if (MCSIndex.Contains(parsedMcsIndex))
+                            {
+                                SelectedMcsIndex = parsedMcsIndex;
+                            }
+                            
+                        }
+                        break;
+                    case Wfb.FecK:
+                        if (int.TryParse(value, out int parsedFecK))
+                        {
+                            // Ensure the parsed power exists in the collection, or set a fallback
+                            if (FecK.Contains(parsedFecK))
+                            {
+                                SelectedFecK = parsedFecK;
+                            }
+                            
+                        }
+                        break;
+                    case Wfb.FecN:
+                        if (int.TryParse(value, out int parsedFecN))
+                        {
+                            // Ensure the parsed power exists in the collection, or set a fallback
+                            if (FecN.Contains(parsedFecN))
+                            {
+                                SelectedFecN = parsedFecN;
+                            }
+                            
+                        }
+                        break;
+                    case Wfb.Channel:
+                        if (int.TryParse(value, out int channel))
+                        {
+                            if (_58frequencyMapping.TryGetValue(channel, out string frequency58String))
+                            {
+                                SelectedFrequency58String = frequency58String;
+                            }
+                            else if (_24frequencyMapping.TryGetValue(channel, out string frequency24String))
+                            {
+                                SelectedFrequency24String = frequency24String;
+                            }
+                            else
+                            {
+                                // Handle unknown channel value
+                            }
+                        }
+                        break;
+
                 }
                 
 
                 // Handle parsed data, e.g., store in a dictionary or bind to properties
-                Console.WriteLine($"Key: {key}, Value: {value}");
+                Logger.Instance.Log($"Key: {key}, Value: {value}");
             }
         }
     }
-    public ICommand RestartWfbCommand { get; } = new RelayCommand(RestartWfb);
+    //public ICommand RestartWfbCommand { get; } = new RelayCommand(RestartWfb);
+    public ICommand RestartWfbCommand { get; private set; }
     
     // ObservableCollections
     public ObservableCollection<string> Frequencies58GHz { get; set; }
@@ -165,19 +397,26 @@ public class WfbSettingsTabViewModel : ReactiveObject
     {
         WfbConfContent = message.Content;
     }
-    public WfbSettingsTabViewModel(IEventAggregator eventAggregator)
+    public WfbSettingsTabViewModel(IEventAggregator eventAggregator, MainWindowViewModel mainWindowViewModel)
     {
         InitializeCollections();
-        
+    
         _eventAggregator = eventAggregator;
         _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>().Subscribe(OnWfbConfContentUpdated);
+    
+        _mainWindowViewModel = mainWindowViewModel;
         
+        RestartWfbCommand = new RelayCommand(() => RestartWfb(_mainWindowViewModel));
     }
     private void OnWfbConfContentUpdated(WfbConfContentUpdatedMessage message)
     {
         WfbConfContent = message.Content;
+        
+        //CanConnect = true;
+        
         ParseWfbConfContent();
     }
+
     
     private void InitializeCollections()
     {
@@ -192,18 +431,17 @@ public class WfbSettingsTabViewModel : ReactiveObject
         LDPC = new ObservableCollection<int> { 0, 1 };
         FecK = new ObservableCollection<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
         FecN = new ObservableCollection<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-    
-        // Set default selected power
-        SelectedPower = Power58GHz.First();
-        
-        // Manually raise property change notification for Power58GHz and SelectedPower
-        this.RaisePropertyChanged(nameof(Power58GHz));
-        this.RaisePropertyChanged(nameof(SelectedPower));
+
+        _canConnect = false;
+
+
     }
 
-    private static void RestartWfb()
+    private static void RestartWfb(MainWindowViewModel mainWindowViewModel)
     {
-        Console.WriteLine("RestartWfbCommand executed");
+        Logger.Instance.Log("*** TODO : RestartWfbCommand executed");
+        // Access the CanConnect property from the MainWindowViewModel instance
+        //_canConnect = mainWindowViewModel.CanConnect;
     }
 
 

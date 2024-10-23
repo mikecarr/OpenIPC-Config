@@ -125,12 +125,12 @@ public partial class MainWindowViewModel : ObservableObject
     
     
 
-    private static void RestartWfb()
-    {
-        string c = "";
-        
-        
-    }
+    // private static void RestartWfb()
+    // {
+    //     string c = "";
+    //     
+    //     
+    // }
     
     public MainWindowViewModel(DeviceConfig deviceConfig, IEventAggregator eventAggregator)
     {
@@ -141,7 +141,7 @@ public partial class MainWindowViewModel : ObservableObject
         _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>().Subscribe((message) =>
         {
             // Handle the event here
-            System.Diagnostics.Debug.WriteLine("Received event: " + message);
+            Logger.Instance.Log("MainWindowViewModel Received event: " + message);
         });
         
         IpAddress = deviceConfig.IpAddress;
@@ -198,14 +198,14 @@ public partial class MainWindowViewModel : ObservableObject
 
     }
 
-    public void AddLogMessage(string message)
-    {
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            string formattedMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
-            LogMessages.Insert(0, formattedMessage); // Safely updating collection on the UI thread
-        });
-    }
+    // public void AddLogMessage(string message)
+    // {
+    //     Dispatcher.UIThread.InvokeAsync(() =>
+    //     {
+    //         string formattedMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+    //         LogMessages.Insert(0, formattedMessage); // Safely updating collection on the UI thread
+    //     });
+    // }
 
     private void CheckIfCanConnect()
     {
@@ -215,9 +215,10 @@ public partial class MainWindowViewModel : ObservableObject
                          && !string.IsNullOrWhiteSpace(Password)
                          && !string.IsNullOrWhiteSpace(IpAddress)
                          && (!string.IsNullOrWhiteSpace(SelectedDeviceType));
+           
+
+            Logger.Instance.Log($"CanConnect: {CanConnect}, Username: {Username}, Password: *****, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");
             
-            Console.WriteLine($"CanConnect: {CanConnect}, Username: {Username}, Password: *****, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");
-            AddLogMessage($"CanConnect: {CanConnect}, Username: {Username}, Password: *****, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");
         });
     }
 
@@ -239,7 +240,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     public async Task SaveRestartMajesticCommand()
     {
-        AddLogMessage("Preparing to Save Majestic file.");
+        Logger.Instance.Log("Preparing to Save Majestic file.");
         var majesticYamlContent = await _sshClientService.DownloadFileAsync(_deviceConfig, OpenIPC.MAJESTIC_FILE_LOC);
 
         try
@@ -269,11 +270,11 @@ public partial class MainWindowViewModel : ObservableObject
             await Task.Delay(5000);
             await _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.MajesticStartCommand);
 
-            AddLogMessage("YAML file saved and majestic service restarted successfully.");
+            Logger.Instance.Log("YAML file saved and majestic service restarted successfully.");
         }
         catch (Exception ex)
         {
-            AddLogMessage($"Failed to save YAML file: {ex.Message}");
+            Logger.Instance.Log($"Failed to save YAML file: {ex.Message}");
         }
     }
 
