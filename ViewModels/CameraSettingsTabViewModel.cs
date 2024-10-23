@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using ExCSS;
 using OpenIPC_Config.Messages;
 using OpenIPC_Config.Models;
@@ -36,7 +38,15 @@ public class CameraSettingsTabViewModel : ViewModelBase
             Logger.Instance.Log($"CanConnect {value}");
         }
     }
+    
+    private async void RestartMajestic(MainWindowViewModel mainWindowViewModel)
+    {
+        Logger.Instance.Log("*** TODO : RestartMajesticCommand executed");
 
+        await SaveRestartMajesticCommand();
+    }
+
+    public ICommand RestartMajesticCommand { get; private set; }
     // ObservableCollections
     public ObservableCollection<string> Resolution { get; set; }
     public ObservableCollection<string> FPS { get; set; }
@@ -58,6 +68,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedResolution, value);
             Logger.Instance.Log($"SelectedResolution updated to {value}");
+            UpdateYamlConfig(Majestic.VideoSize, value.ToString());
         }
     }
 
@@ -69,6 +80,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedFps, value);
             Logger.Instance.Log($"SelectedFps updated to {value}");
+            UpdateYamlConfig(Majestic.VideoFps, value.ToString());
         }
     }
     
@@ -80,6 +92,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedCodec, value);
             Logger.Instance.Log($"SelectedCodec updated to {value}");
+            UpdateYamlConfig(Majestic.VideoCodec, value.ToString());
         }
     }
     
@@ -91,6 +104,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedBitrate, value);
             Logger.Instance.Log($"SelectedBitrate updated to {value}");
+            UpdateYamlConfig(Majestic.VideoBitrate, value.ToString());
         }
     }
 
@@ -102,6 +116,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedExposure, value);
             Logger.Instance.Log($"SelectedExposure updated to {value}");
+            UpdateYamlConfig(Majestic.IspExposure, value.ToString());
         }
     }
 
@@ -113,6 +128,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedHue, value);
             Logger.Instance.Log($"SelectedHue updated to {value}");
+            UpdateYamlConfig(Majestic.ImageHue, value.ToString());
         }
     }
     
@@ -124,6 +140,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedContrast, value);
             Logger.Instance.Log($"SelectedContrast updated to {value}");
+            UpdateYamlConfig(Majestic.ImageContrast, value.ToString());
         }
     }
 
@@ -135,6 +152,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedSaturation, value);
             Logger.Instance.Log($"SelectedSaturation updated to {value}");
+            UpdateYamlConfig(Majestic.ImageSaturation, value.ToString());
         }
     }
 
@@ -146,28 +164,31 @@ public class CameraSettingsTabViewModel : ViewModelBase
         {
             this.RaiseAndSetIfChanged(ref _selectedLuminance, value);
             Logger.Instance.Log($"SelectedLuminance updated to {value}");
+            UpdateYamlConfig(Majestic.ImageLuminance, value.ToString());
         }
     }
 
-    private bool _selectedFlip;
-    public bool SelectedFlip
+    private string _selectedFlip;
+    public string SelectedFlip
     {
         get => _selectedFlip;
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFlip, value);
             Logger.Instance.Log($"SelectedFlip updated to {value}");
+            UpdateYamlConfig(Majestic.ImageFlip, value.ToString());
         }
     }
 
-    private bool _selectedMirror;
-    public bool SelectedMirror
+    private string _selectedMirror;
+    public string SelectedMirror
     {
         get => _selectedMirror;
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedMirror, value);
             Logger.Instance.Log($"SelectedMirror updated to {value}");
+            UpdateYamlConfig(Majestic.ImageMirror, value.ToString());
         }
     }
     
@@ -181,6 +202,8 @@ public class CameraSettingsTabViewModel : ViewModelBase
     
         _mainWindowViewModel = mainWindowViewModel;
         
+        RestartMajesticCommand = new RelayCommand(() => RestartMajestic(_mainWindowViewModel));
+        
         _deviceConfig = deviceConfig;
         _sshClientService = new SshClientService();
     }
@@ -188,6 +211,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
     private void OnMajesticContentUpdated(MajesticContentUpdatedMessage message)
     {
         var majesticContent = message.Content;
+        CanConnect = true;
         ParseYamlConfig(majesticContent);
 
     }
@@ -286,10 +310,10 @@ public class CameraSettingsTabViewModel : ViewModelBase
                     SelectedLuminance = value;
                     break;
                 case Majestic.ImageFlip:
-                    SelectedFlip = Boolean.Parse(value);
+                    SelectedFlip = value;
                     break;
                 case Majestic.ImageMirror:
-                    SelectedMirror = Boolean.Parse(value);
+                    SelectedMirror = value;
                     break;
                 default:
                     break;

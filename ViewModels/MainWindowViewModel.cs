@@ -122,16 +122,7 @@ public partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    
-    
-
-    // private static void RestartWfb()
-    // {
-    //     string c = "";
-    //     
-    //     
-    // }
-    
+   
     public MainWindowViewModel(DeviceConfig deviceConfig, IEventAggregator eventAggregator)
     {
         _deviceConfig = deviceConfig;

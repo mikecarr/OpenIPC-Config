@@ -23,30 +23,20 @@ public class WfbSettingsTabViewModel : ReactiveObject
 
     private IEventAggregator _eventAggregator;
     
-    //public bool CanConnect { get; set; }
-
-    // private ObservableCollection<bool> _canConnect;
-    // public ObservableCollection<bool> CanConnect
-    // {
-    //     get => _canConnect;
-    //     set
-    //     {
-    //         this.RaiseAndSetIfChanged(ref _canConnect, value);
-    //     }
-    // }
-    
     private DeviceConfig _deviceConfig;
-    
     
     private bool _canConnect;
 
     public bool CanConnect
     {
         get => _canConnect;
-        set { this.RaiseAndSetIfChanged(ref _canConnect, value); 
-        Logger.Instance.Log($"CanConnect {value}");
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _canConnect, value);
+            Logger.Instance.Log($"CanConnect {value}");
+        }
     }
-}
+
 
     private string WfbConfContent
     {
@@ -345,7 +335,6 @@ public class WfbSettingsTabViewModel : ReactiveObject
             }
         }
     }
-    //public ICommand RestartWfbCommand { get; } = new RelayCommand(RestartWfb);
     public ICommand RestartWfbCommand { get; private set; }
     
     // ObservableCollections
@@ -459,7 +448,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
 
     private void RestartWfb(MainWindowViewModel mainWindowViewModel)
     {
-        Logger.Instance.Log("*** TODO : RestartWfbCommand executed");
+        Logger.Instance.Log("RestartWfbCommand executed");
         // Access the CanConnect property from the MainWindowViewModel instance
         //_canConnect = mainWindowViewModel.CanConnect;
         // Get the current values from the controls
