@@ -16,5 +16,7 @@ namespace OpenIPC_Config
         Task<string> DownloadFileAsync(DeviceConfig deviceConfig, string remotePath);
 
         Task UploadBinaryAsync(DeviceConfig deviceConfig, string remoteDirectory, string fileName);
+        
+        Task UploadBinaryAsync(DeviceConfig deviceConfig, string remoteDirectory, OpenIPC.FileType fileType, string fileName);
     }
 }

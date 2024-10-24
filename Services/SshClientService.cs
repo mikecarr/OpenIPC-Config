@@ -149,24 +149,47 @@ namespace OpenIPC_Config
             return fileContent; // Return the content of the file
         }
 
-    
-    
+        
         public async Task UploadBinaryAsync(DeviceConfig deviceConfig, string remoteDirectory, string fileName)
         {
+            await UploadBinaryAsync(deviceConfig, remoteDirectory, OpenIPC.FileType.Normal, fileName);
+        }  
+        public async Task UploadBinaryAsync(DeviceConfig deviceConfig, string remoteDirectory, OpenIPC.FileType fileType, string fileName)
+        {
             string binariesFolderPath = Path.Combine(Environment.CurrentDirectory, "binaries");
-            string filePath = Path.Combine(binariesFolderPath, fileName);
-
+            string filePath = String.Empty;
+            string remoteFilePath = String.Empty;
+            
+            switch (fileType)
+            {
+                case OpenIPC.FileType.Normal:
+                    filePath = Path.Combine(binariesFolderPath, fileName);
+                    remoteFilePath = Path.Combine(remoteDirectory, fileName);
+                    break;
+                case OpenIPC.FileType.BetaFlightFonts:
+                    filePath = Path.Combine(binariesFolderPath, "fonts/bf/", fileName);
+                    remoteFilePath = Path.Combine(remoteDirectory, fileName);
+                    break;
+                case OpenIPC.FileType.iNavFonts:
+                    filePath = Path.Combine(binariesFolderPath, "fonts/inav/", fileName);
+                    remoteFilePath = Path.Combine(remoteDirectory, fileName);
+                    break;
+            }
+            
             if (File.Exists(filePath))
             {
-                string remoteFilePath = Path.Combine(remoteDirectory, fileName);
-                Console.WriteLine($"Uploading {fileName} to {remoteFilePath}...");
-                await UploadFileAsync(deviceConfig, filePath, remoteFilePath);
-                Console.WriteLine($"Uploaded {fileName} successfully.");
+                
+                Logger.Instance().Log($"Uploading {fileName} to {remoteFilePath}...");
+                await UploadFileAsync(deviceConfig, filePath,remoteFilePath);
+                Logger.Instance().Log($"Uploaded {fileName} successfully.");
             }
-            else
-            {
-                Console.WriteLine($"File {fileName} not found in binaries folder.");
-            }
+
+            
+            
+            
+            
+            
+            
         }
 }
 }

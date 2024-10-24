@@ -12,9 +12,17 @@ public class OpenIPC
     public const string LOCAL_BETAFLIGHT_FONTS_FOLDER = "binaries/fonts/bf";
     public const string LOCAL_INAV_FONTS_FOLDER = "binaries/fonts/inav";
     
-    
+    public const string REMOTE_ETC_FOLDER = "/etc";
     public const string REMOTE_BINARIES_FOLDER = "/usr/bin";
     public const string REMOTE_FONTS_FOLDER = "/usr/share/fonts/";
     
+    public enum FileType
+    {
+        Normal,
+        BetaFlightFonts,
+        iNavFonts
+    }
     
 }
+
+

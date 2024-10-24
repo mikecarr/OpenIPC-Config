@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:OpenIPC_Config.ViewModels"
              xmlns:viewModels="clr-namespace:OpenIPC_Config.ViewModels"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d"
              x:Class="OpenIPC_Config.Views.TelemetryTabView"
              x:DataType="vm:TelemetryTabViewModel">
@@ -59,6 +60,7 @@
             <Button Content="Disable UART0"  
                     Command="{Binding DisableUART0Command}" IsEnabled="{Binding CanConnect}"/>
             <Button Content="Add MAVLINK" 
+                    ToolTip.Tip="1) Add OSD SOC temperature 2) Set low delay for the channels.sh switches"
                     Command="{Binding AddMavlinkCommand}" IsEnabled="{Binding CanConnect}"/>
             <Button Content="Upload MSPOSD" 
                     Command="{Binding UploadMSPOSDCommand}" IsEnabled="{Binding CanConnect}"/>
@@ -82,8 +84,8 @@
                 <!-- Toggle for Onboard REC -->
                 <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
 
-                    <RadioButton Content="ON" />
-                    <RadioButton Content="OFF" IsChecked="True" Margin="10,0,0,0"/>
+                    <RadioButton Content="ON" IsChecked="{Binding IsOnboardRecOn}" />
+                    <RadioButton Content="OFF" IsChecked="{Binding IsOnboardRecOff}" Margin="10,0,0,0"/>
                 </StackPanel>
             </Grid>
         </StackPanel>

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData.Binding;
@@ -51,12 +52,27 @@ public class TelemetryTabViewModel : ViewModelBase
     private string _selectedMcsIndex;
     private string _selectedAggregate;
     private string _selectedRcChannel;
-    private string _selectedRouter; 
+    private string _selectedRouter;
+    
+    private bool _isOnboardRecOn;
+    private bool _isOnboardRecOff;
     
     private bool _canConnect;
     
     private string _telemetryContent;
 
+    public bool IsOnboardRecOn
+    {
+        get => _isOnboardRecOn;
+        set => this.RaiseAndSetIfChanged(ref _isOnboardRecOn, value);
+    }
+
+    // Property to track whether the "OFF" radio button is checked
+    public bool IsOnboardRecOff
+    {
+        get => _isOnboardRecOff;
+        set => this.RaiseAndSetIfChanged(ref _isOnboardRecOff, value);
+    }
     public bool CanConnect
     {
         get => _canConnect;
@@ -266,19 +282,28 @@ public class TelemetryTabViewModel : ViewModelBase
     }
     private async void OnBoardRec(MainWindowViewModel mainWindowViewModel)  
     {
-        Logger.Instance().Log("*** TODO : OnBoardRecCommand executed");
-        //await SaveOnBoardRecCommand();
+        if (IsOnboardRecOn == true)
+        {
+            _sshClientService.ExecuteCommandAsync(_deviceConfig, "yaml-cli .records.enabled true");
+        }
+        else if (IsOnboardRecOff == true)
+        {
+            _sshClientService.ExecuteCommandAsync(_deviceConfig, "yaml-cli .records.enabled false");
+        }
+        
     }
     
     private async void AddMavlink(MainWindowViewModel mainWindowViewModel)
     {
-        Logger.Instance().Log("*** TODO : AddMavlinkCommand executed");
-        //await SaveAddMavlinkCommand();
+        Logger.Instance().Log("AddMavlinkCommand executed");
+        _sshClientService.ExecuteCommandAsync(_deviceConfig, TelemetryCommands.Extra);
+        _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.RebootCommand);
+        
     }
     
     private async void UploadMSPOSD(MainWindowViewModel mainWindowViewModel)
     {
-        Logger.Instance().Log("*** TODO : UploadMSPOSDCommand executed");
+        Logger.Instance().Log("UploadMSPOSDCommand executed");
         
         string msposdFile = "msposd";
         
@@ -295,20 +320,44 @@ public class TelemetryTabViewModel : ViewModelBase
             return; 
         }
         else
-        {
-            _sshClientService.UploadBinaryAsync(_deviceConfig, OpenIPC.REMOTE_BINARIES_FOLDER, "msposd");
-            _sshClientService.ExecuteCommandAsync(_deviceConfig, "chmod +x /usr/bin/msposd"); 
-         
-        }
         
+        {
+            // killall -q msposd
+            await _sshClientService.ExecuteCommandAsync(_deviceConfig, "killall -q msposd");
+            // upload msposd
+            await _sshClientService.UploadBinaryAsync(_deviceConfig, OpenIPC.REMOTE_BINARIES_FOLDER, "msposd");
+            // chmod +x /usr/bin/msposd
+            await _sshClientService.ExecuteCommandAsync(_deviceConfig, "chmod +x /usr/bin/msposd");
+            
+            // upload betaflight fonts
+            await _sshClientService.ExecuteCommandAsync(_deviceConfig, $"mkdir {OpenIPC.REMOTE_FONTS_FOLDER}");
+            await _sshClientService.UploadBinaryAsync(_deviceConfig, OpenIPC.REMOTE_FONTS_FOLDER, OpenIPC.FileType.BetaFlightFonts,"font.png");
+            await _sshClientService.UploadBinaryAsync(_deviceConfig, OpenIPC.REMOTE_FONTS_FOLDER, OpenIPC.FileType.BetaFlightFonts,"font_hd.png");
+            
+            // upload vtxmenu.ini /etc
+            await _sshClientService.UploadBinaryAsync(_deviceConfig, OpenIPC.REMOTE_ETC_FOLDER, "vtxmenu.ini");
+
+            // ensure file is unix formatted
+            await _sshClientService.ExecuteCommandAsync(_deviceConfig, "dos2unix /etc/vtxmenu.ini");
+            
+            // reboot
+            await _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.RebootCommand);
+            
+            Thread.Sleep(3000);
+            
+
+        }
         
         
     }
     
     private async void UploadINav(MainWindowViewModel mainWindowViewModel)
     {
-        Logger.Instance().Log("*** TODO : UploadINavCommand executed");
-        //await SaveUploadINavCommand();
+        Logger.Instance().Log("UploadINavCommand executed");
+        // upload betaflight fonts
+        await _sshClientService.ExecuteCommandAsync(_deviceConfig, $"mkdir {OpenIPC.REMOTE_FONTS_FOLDER}");
+        await _sshClientService.UploadBinaryAsync(_deviceConfig, OpenIPC.REMOTE_FONTS_FOLDER, OpenIPC.FileType.iNavFonts,"font.png");
+        await _sshClientService.UploadBinaryAsync(_deviceConfig, OpenIPC.REMOTE_FONTS_FOLDER, OpenIPC.FileType.iNavFonts,"font_hd.png");
     }
     
 
