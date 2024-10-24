@@ -8,6 +8,9 @@ public class OpenIPC
     
     public const string LOCAL_BINARIES_FOLDER = "binaries";
     public const string LOCAL_SENSORS_FOLDER = "binaries/sensors";
+    public const string LOCAL_FONTS_FOLDER = "binaries/fonts";
+    public const string LOCAL_BETAFLIGHT_FONTS_FOLDER = "binaries/fonts/bf";
+    public const string LOCAL_INAV_FONTS_FOLDER = "binaries/fonts/inav";
     
     
     public const string REMOTE_BINARIES_FOLDER = "/usr/bin";

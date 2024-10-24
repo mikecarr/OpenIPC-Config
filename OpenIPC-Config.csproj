@@ -49,5 +49,9 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="binaries\fonts\" />
+    </ItemGroup>
+
     
 </Project>
