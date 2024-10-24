@@ -2,54 +2,95 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OpenIPC_Config.Views.TelemetryTabView">
+             xmlns:vm="clr-namespace:OpenIPC_Config.ViewModels"
+             xmlns:viewModels="clr-namespace:OpenIPC_Config.ViewModels"
+             mc:Ignorable="d"
+             x:Class="OpenIPC_Config.Views.TelemetryTabView"
+             x:DataType="vm:TelemetryTabViewModel">
     
-    <UserControl.Styles>
-        <StyleInclude Source="/Styles/Styles.axaml" />
-    </UserControl.Styles>
-
     <!-- Telemetry Tab Content -->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Left Side: Labels -->
         <StackPanel Grid.Column="0" Orientation="Vertical" Spacing="5" Margin="10">
             <Label Content="Select Serial Port"/>
             <Label Content="Select Baud Rate"/>
-            <Label Content="Select MAVFWD(0)/MAV-ROUTER(1)"/>
+            <Label Content="Select MAVFWD(0)/MAV-ROUTER(1)/MSPOSD(2)" />
             <Label Content="Select MCS INDEX"/>
             <Label Content="Select Aggregate"/>
             <Label Content="Select RC Channel"/>
         </StackPanel>
-        <!-- Left Side: ComboBoxes -->
+        
+        <!-- ComboBoxes -->
         <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="5" Margin="10">
-            <ComboBox Width="250" PlaceholderText="Serial Port"/>
-            <ComboBox Width="250" PlaceholderText="Baud Rate"/>
-            <ComboBox Width="250" PlaceholderText="MAVFWD(0)/MAV-ROUTER(1)"/>
-            <ComboBox Width="250" PlaceholderText="MCS INDEX"/>
-            <ComboBox Width="250" PlaceholderText="Aggregate"/>
-            <ComboBox Width="250" PlaceholderText="RC Channel"/>
+            <ComboBox ToolTip.Tip="Serial Port" Width="250" ItemsSource="{Binding SerialPorts}" 
+                      SelectedItem="{Binding SelectedSerialPort, Mode=TwoWay}" /> 
+            
+            <ComboBox ToolTip.Tip="Baud Rate"  ItemsSource="{Binding BaudRates}" 
+                      SelectedItem="{Binding SelectedBaudRate, Mode=TwoWay}" /> 
+            
+            <ComboBox ToolTip.Tip="MAVFWD(0)/MAV-ROUTER(1)/MSPOSD(2)" ItemsSource="{Binding Router}" 
+                      SelectedItem="{Binding SelectedRouter, Mode=TwoWay}" WrapSelection="True"/> 
+            
+            <ComboBox ToolTip.Tip="MCS INDEX"  ItemsSource="{Binding McsIndex}" 
+                      SelectedItem="{Binding SelectedMcsIndex, Mode=TwoWay}" /> 
+            
+            <ComboBox ToolTip.Tip="Aggregate" ItemsSource="{Binding Aggregate}" 
+                      SelectedItem="{Binding SelectedAggregate, Mode=TwoWay}" /> 
+            
+            <ComboBox ToolTip.Tip="RC Channel" ItemsSource="{Binding RC_Channel}" 
+                      SelectedItem="{Binding SelectedRcChannel, Mode=TwoWay}" />
+            
         </StackPanel>
 
         <!-- Right Side: Buttons and Toggle Switches -->
         <StackPanel Orientation="Vertical" Spacing="5" Grid.Column="2" Margin="10">
-            <Button Content="Enable UART0"  />
-            <Button Content="Disable UART0"  />
-            <Button Content="Add MAVLINK"  />
-            <Button Content="Upload MSPOSD"  />
-            <Button Content="Upload INAV Fonts" />
-                        
-            <!-- Toggle for Onboard REC -->
-            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                <TextBlock Text="Onboard REC" VerticalAlignment="Center" Foreground="White"/>
-                <RadioButton Content="ON" IsChecked="True"/>
-                <RadioButton Content="OFF" Margin="10,0,0,0"/>
-            </StackPanel>
+            <Button Content="Enable UART0"  
+                    Command="{Binding EnableUART0Command}" IsEnabled="{Binding CanConnect}"/>
+            <Button Content="Disable UART0"  
+                    Command="{Binding DisableUART0Command}" IsEnabled="{Binding CanConnect}"/>
+            <Button Content="Add MAVLINK" 
+                    Command="{Binding AddMavlinkCommand}" IsEnabled="{Binding CanConnect}"/>
+            <Button Content="Upload MSPOSD" 
+                    Command="{Binding UploadMSPOSDCommand}" IsEnabled="{Binding CanConnect}"/>
+            <Button Content="Upload INAV Fonts"
+                    Command="{Binding UploadINavCommand}" IsEnabled="{Binding CanConnect}"/>
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>  
+                </Grid.RowDefinitions>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Content="Onboard REC" 
+                        Command="{Binding OnBoardRecCommand}" IsEnabled="{Binding CanConnect}" />
+                <!-- Toggle for Onboard REC -->
+                <StackPanel Grid.Row="0" Grid.Column="1"  Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+
+                    <RadioButton Content="ON" />
+                    <RadioButton Content="OFF" IsChecked="True" Margin="10,0,0,0"/>
+                </StackPanel>
+            </Grid>
         </StackPanel>
+        
+        <!-- Restart Majestic Button -->
+        <Button Grid.Row="5" Content="Save" HorizontalAlignment="Left" Margin="10" 
+                Command="{Binding SaveAndRestartTelemetryCommand}" IsEnabled="{Binding CanConnect}"/>
     </Grid>
     
 </UserControl>

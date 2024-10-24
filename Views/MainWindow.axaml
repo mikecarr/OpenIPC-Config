@@ -5,7 +5,7 @@
         xmlns:openIpcConfig="clr-namespace:OpenIPC_Config"
         xmlns:models="clr-namespace:OpenIPC_Config.Models"
         Title="OpenIPC Configurator"
-        Width="800" Height="650"
+        Width="920" Height="650"
         x:DataType="viewModels:MainWindowViewModel"
         x:Class="OpenIPC_Config.Views.MainWindow">
     
@@ -14,7 +14,6 @@
     <Window.Styles>
         <StyleInclude Source="/Styles/Styles.axaml" />
     </Window.Styles>
-
     
     <Grid>
         
@@ -28,6 +27,7 @@
         </Grid.RowDefinitions>
         
         <!-- TabControl at the top -->
+        <Border BorderBrush="Black" BorderThickness="1,1,1,1" Margin="2" Padding="2">
         <TabControl Grid.Row="0">
             <TabItem Header="WFB Settings">
                 <!-- Load the UserControl for WFB Settings -->
@@ -52,7 +52,7 @@
             </TabItem>
             <!-- <TabItem Header="OSD" /> -->
         </TabControl>
-
+        </Border>
         <!-- Footer: IP Address, Password, Connect, Save and Reboot, Reboot -->
         
         <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,*,*" RowDefinitions="Auto,Auto" Margin="10">

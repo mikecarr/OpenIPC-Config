@@ -11,6 +11,10 @@
     
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
+        <None Update="binaries\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        
     </ItemGroup>
 
     <ItemGroup>

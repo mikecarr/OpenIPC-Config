@@ -17,6 +17,10 @@ public class ViewModelLocator
     public MainWindowViewModel MainWindowViewModel { get; private set; }
     public WfbSettingsTabViewModel WfbSettingsTabViewModel { get; }
     public CameraSettingsTabViewModel CameraSettingsTabViewModel { get; }
+    
+    public TelemetryTabViewModel TelemetryTabViewModel { get; }
+    
+    
 
     public IEventAggregator EventAggregator => _eventAggregator;
     private IEventAggregator _eventAggregator;
@@ -25,21 +29,25 @@ public class ViewModelLocator
     
     public ViewModelLocator(IEventAggregator eventAggregator)
     {
+        Instance = this;
         _eventAggregator = eventAggregator;
+        var settings = SettingsManager.LoadSettings();
         
         MessageViewModel = new MessageViewModel(eventAggregator);
-        var settings = SettingsManager.LoadSettings();
         MainWindowViewModel = new MainWindowViewModel(settings, eventAggregator);
 
         WfbSettingsTabViewModel = new WfbSettingsTabViewModel(settings,eventAggregator, MainWindowViewModel);
         CameraSettingsTabViewModel = new CameraSettingsTabViewModel(settings,eventAggregator, MainWindowViewModel);
-        
-        Instance = this;
+        TelemetryTabViewModel = new TelemetryTabViewModel(settings,eventAggregator, MainWindowViewModel);
 
         _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>().Subscribe(x 
             => Logger.Instance().Log("**** WfbConfContentUpdatedEvent event fired!"));
         _eventAggregator.GetEvent<MajesticContentUpdatedEvent>().Subscribe(x 
             => Logger.Instance().Log("**** MajesticContentUpdatedEvent event fired!"));
+        _eventAggregator.GetEvent<TelemetryContentUpdatedEvent>().Subscribe(x 
+            => Logger.Instance().Log("**** TelemetryContentUpdatedEvent event fired!"));
+        _eventAggregator.GetEvent<MessageEvent>().Subscribe(x 
+            => Logger.Instance().Log("**** MessageEvent event fired!"));
 
     }
     

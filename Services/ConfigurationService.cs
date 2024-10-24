@@ -35,4 +35,12 @@ public class ConfigurationService
         //_deviceConfigs[deviceType] = config;
         // Optionally, save to a file or database for persistence
     }
+    
+    // Dim fileExists As Boolean = File.Exists(settingsconf)
+    // Using sw As New StreamWriter(File.Open(settingsconf, FileMode.OpenOrCreate))
+    // sw.WriteLine("openipc:192.168.0.1")
+    //     sw.WriteLine("nvr:192.168.0.1")
+    // sw.WriteLine("radxa:192.168.0.1")
+    //     End Using
+    //     MsgBox("File " + settingsconf + " not found and default created!")
 }

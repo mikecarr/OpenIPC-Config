@@ -277,7 +277,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
                 _yamlConfig.Add(fullKey, value);
             }
 
-            Logger.Instance().Log($"Found {fullKey}: {scalarNode.Value}");
+            Logger.Instance().Log($"Camera Found {fullKey}: {scalarNode.Value}");
             
 
             // Update UI properties based on the keys found

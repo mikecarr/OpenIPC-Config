@@ -331,7 +331,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
                 
 
                 // Handle parsed data, e.g., store in a dictionary or bind to properties
-                Logger.Instance().Log($"Key: {key}, Value: {value}");
+                Logger.Instance().Log($"WFB - Key: {key}, Value: {value}");
             }
         }
     }

@@ -250,6 +250,11 @@ public partial class MainWindowViewModel : ObservableObject
         _eventAggregator.GetEvent<MajesticContentUpdatedEvent>()
             .Publish(new MajesticContentUpdatedMessage(majesticContent));
         
+        String telemetryContent = await _sshClientService.DownloadFileAsync(deviceConfig, OpenIPC.TELEMETRY_FILE_LOC);
+        // Publish a message to WfbSettingsTabViewModel
+        _eventAggregator.GetEvent<TelemetryContentUpdatedEvent>()
+            .Publish(new TelemetryContentUpdatedMessage(telemetryContent));
+        
 
     }
 }
