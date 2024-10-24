@@ -21,12 +21,12 @@ namespace OpenIPC_Config.ViewModels
 
         private static void ScriptFilesBackup()
         {
-            Console.WriteLine("Backup script executed");
+            Logger.Instance().Log("Backup script executed");
         }
 
         private static void ScriptFilesRestore()
         {
-            Console.WriteLine("Restore script executed");
+            Logger.Instance().Log("Restore script executed");
         }
     }
 }

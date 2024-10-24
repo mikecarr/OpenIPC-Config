@@ -8,9 +8,9 @@
              x:DataType="viewModels:MessageViewModel"
              d:DataContext="{d:DesignInstance Type=viewModels:MessageViewModel}">
     
-    <UserControl.DataContext>
-        <viewModels:MessageViewModel />
-    </UserControl.DataContext>
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/Styles.axaml" />
+    </UserControl.Styles>
     
     <StackPanel>
         <ScrollViewer>

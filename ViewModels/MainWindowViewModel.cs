@@ -132,7 +132,7 @@ public partial class MainWindowViewModel : ObservableObject
         _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>().Subscribe((message) =>
         {
             // Handle the event here
-            Logger.Instance.Log("MainWindowViewModel Received event: " + message);
+            Logger.Instance().Log("MainWindowViewModel Received event: " + message);
         });
         
         IpAddress = deviceConfig.IpAddress;
@@ -140,7 +140,7 @@ public partial class MainWindowViewModel : ObservableObject
         Password = deviceConfig.Password;
         DeviceType = deviceConfig.DeviceType;
 
-        _sshClientService = new SshClientService();
+        _sshClientService = new SshClientService(_eventAggregator);
 
         InitializeCollections();
         SetDefaultValues();
@@ -185,7 +185,7 @@ public partial class MainWindowViewModel : ObservableObject
         _deviceConfig.DeviceType = deviceConfig.DeviceType; 
         
         
-        Logger.Instance.Log("Settings saved.");
+        Logger.Instance().Log("Settings saved.");
 
     }
 
@@ -208,7 +208,7 @@ public partial class MainWindowViewModel : ObservableObject
                          && (!string.IsNullOrWhiteSpace(SelectedDeviceType));
            
 
-            Logger.Instance.Log($"CanConnect: {CanConnect}, Username: {Username}, Password: *****, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");
+            Logger.Instance().Log($"CanConnect: {CanConnect}, Username: {Username}, Password: *****, IP: {IpAddress}, DeviceType: {SelectedDeviceType}()");
             
         });
     }

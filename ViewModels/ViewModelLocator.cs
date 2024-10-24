@@ -37,9 +37,9 @@ public class ViewModelLocator
         Instance = this;
 
         _eventAggregator.GetEvent<WfbConfContentUpdatedEvent>().Subscribe(x 
-            => Console.WriteLine("WfbConfContentUpdatedEvent event fired!"));
+            => Logger.Instance().Log("**** WfbConfContentUpdatedEvent event fired!"));
         _eventAggregator.GetEvent<MajesticContentUpdatedEvent>().Subscribe(x 
-            => Console.WriteLine("MajesticContentUpdatedEvent event fired!"));
+            => Logger.Instance().Log("**** MajesticContentUpdatedEvent event fired!"));
 
     }
     

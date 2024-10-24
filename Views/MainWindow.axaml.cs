@@ -31,7 +31,7 @@ public partial class MainWindow : Window
     private async void btnRestartWFB_Click(object? sender, RoutedEventArgs e)
     {
         // string externFile = "extern.sh";
-        // Logger.Instance.Log("RestartWFB Button clicked");
+        // Logger.Instance().Log("RestartWFB Button clicked");
         //
         // // Check if the file exists
         // if (!System.IO.File.Exists(externFile))
@@ -54,7 +54,7 @@ public partial class MainWindow : Window
         //         process.StartInfo.RedirectStandardOutput = true;
         //         process.Start();
         //         string output = await process.StandardOutput.ReadToEndAsync();
-        //         Logger.Instance.Log(output); // Log output if needed
+        //         Logger.Instance().Log(output); // Log output if needed
         //     }
         // }
         // else

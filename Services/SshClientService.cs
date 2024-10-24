@@ -3,15 +3,23 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using OpenIPC_Config.Models;
+using Prism.Events;
 using Renci.SshNet;
 
 namespace OpenIPC_Config
 {
     public class SshClientService : ISshClientService
     {
-        public  async Task ExecuteCommandAsync(DeviceConfig deviceConfig, string command)
+        private IEventAggregator _eventAggregator;
+        
+        public SshClientService(IEventAggregator eventAggregator)
         {
-            Logger.Instance.Log($"Executing command: '{command}' on {deviceConfig.IpAddress}.");
+            _eventAggregator = eventAggregator;
+        }
+        
+        public async Task ExecuteCommandAsync(DeviceConfig deviceConfig, string command)
+        {
+            Logger.Instance().Log($"Executing command: '{command}' on {deviceConfig.IpAddress}.");
 
             using (var client = new SshClient(deviceConfig.IpAddress, deviceConfig.Username, deviceConfig.Password))
             {
@@ -19,11 +27,11 @@ namespace OpenIPC_Config
                 {
                     client.Connect();
                     var result = client.RunCommand(command);
-                    //Logger.Instance.Log($"Command executed successfully. Result: {result.Result}");
+                    //Logger.Instance().Log($"Command executed successfully. Result: {result.Result}");
                 }
                 catch (Exception ex)
                 {
-                    //Logger.Instance.Log($"Error executing command: {ex.Message}");
+                    //Logger.Instance().Log($"Error executing command: {ex.Message}");
                 }
                 finally
                 {
@@ -34,7 +42,7 @@ namespace OpenIPC_Config
 
         public async Task UploadFileAsync(DeviceConfig deviceConfig, string remotePath, string fileContent)
         {
-            Logger.Instance.Log($"Uploading content to '{remotePath}' on {deviceConfig.IpAddress}.");
+            Logger.Instance().Log($"Uploading content to '{remotePath}' on {deviceConfig.IpAddress}.");
 
             await Task.Run(() =>
             {
@@ -48,12 +56,12 @@ namespace OpenIPC_Config
                         using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(fileContent)))
                         {
                             client.UploadFile(memoryStream, remotePath);
-                            Logger.Instance.Log("File uploaded successfully.");
+                            Logger.Instance().Log("File uploaded successfully.");
                         }
                     }
                     catch (Exception ex)
                     {
-                        Logger.Instance.Log($"Error uploading file: {ex.Message}");
+                        Logger.Instance().Log($"Error uploading file: {ex.Message}");
                     }
                     finally
                     {
@@ -66,7 +74,7 @@ namespace OpenIPC_Config
 
         public async Task<string> DownloadFileAsync(DeviceConfig deviceConfig, string remotePath)
         {
-            Logger.Instance.Log($"Downloading file from '{remotePath}' on {deviceConfig.IpAddress}.");
+            Logger.Instance().Log($"Downloading file from '{remotePath}' on {deviceConfig.IpAddress}.");
 
             string fileContent = string.Empty;
 
@@ -82,12 +90,12 @@ namespace OpenIPC_Config
                             // Download the file content into a MemoryStream
                             client.DownloadFile(remotePath, memoryStream);
                             fileContent = System.Text.Encoding.UTF8.GetString(memoryStream.ToArray());
-                            Logger.Instance.Log("File downloaded successfully.");
+                            Logger.Instance().Log("File downloaded successfully.");
                         }
                     }
                     catch (Exception ex)
                     {
-                        Logger.Instance.Log($"Error downloading file: {ex.Message}");
+                        Logger.Instance().Log($"Error downloading file: {ex.Message}");
                     }
                     finally
                     {

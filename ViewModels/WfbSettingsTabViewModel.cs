@@ -33,7 +33,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _canConnect, value);
-            Logger.Instance.Log($"CanConnect {value}");
+            Logger.Instance().Log($"CanConnect {value}");
         }
     }
 
@@ -68,7 +68,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedPower, value);
-            Logger.Instance.Log($"SelectedPower (5.8) updated to {value}");
+            Logger.Instance().Log($"SelectedPower (5.8) updated to {value}");
         }
     }
     
@@ -80,7 +80,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedPower24GHz, value);
-            Logger.Instance.Log($"SelectedPower (2.4) updated to {value}");
+            Logger.Instance().Log($"SelectedPower (2.4) updated to {value}");
         }
     }
     
@@ -91,7 +91,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedChannel, value);
-            Logger.Instance.Log($"SelectedChannel updated to {value}");
+            Logger.Instance().Log($"SelectedChannel updated to {value}");
         }
     }
     
@@ -102,7 +102,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedLdpc, value);
-            Logger.Instance.Log($"SelectedLdpc updated to {value}");
+            Logger.Instance().Log($"SelectedLdpc updated to {value}");
         }
     }
     
@@ -113,7 +113,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedStbc, value);
-            Logger.Instance.Log($"SelectedStbc updated to {value}");
+            Logger.Instance().Log($"SelectedStbc updated to {value}");
         }
     }
     
@@ -124,7 +124,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedMcsIndex, value);
-            Logger.Instance.Log($"SelectedMcsIndex updated to {value}");
+            Logger.Instance().Log($"SelectedMcsIndex updated to {value}");
         }
     }
     
@@ -135,7 +135,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFecK, value);
-            Logger.Instance.Log($"SelectedFecK updated to {value}");
+            Logger.Instance().Log($"SelectedFecK updated to {value}");
         }
     }
     
@@ -146,7 +146,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFecN, value);
-            Logger.Instance.Log($"SelectedFecN updated to {value}");
+            Logger.Instance().Log($"SelectedFecN updated to {value}");
         }
     }
     
@@ -186,7 +186,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
     // Method to parse the wfbConfContent
     private void ParseWfbConfContent()
     {
-        Logger.Instance.Log("Parsing wfbConfContent.");
+        Logger.Instance().Log("Parsing wfbConfContent.");
         
         if (string.IsNullOrEmpty(WfbConfContent))
         {
@@ -331,7 +331,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
                 
 
                 // Handle parsed data, e.g., store in a dictionary or bind to properties
-                Logger.Instance.Log($"Key: {key}, Value: {value}");
+                Logger.Instance().Log($"Key: {key}, Value: {value}");
             }
         }
     }
@@ -417,7 +417,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
         RestartWfbCommand = new RelayCommand(() => RestartWfb(_mainWindowViewModel));
         
         _deviceConfig = deviceConfig;
-        _sshClientService = new SshClientService();
+        _sshClientService = new SshClientService(_eventAggregator);
     }
     private void OnWfbConfContentUpdated(WfbConfContentUpdatedMessage message)
     {
@@ -448,7 +448,7 @@ public class WfbSettingsTabViewModel : ReactiveObject
 
     private void RestartWfb(MainWindowViewModel mainWindowViewModel)
     {
-        Logger.Instance.Log("RestartWfbCommand executed");
+        Logger.Instance().Log("RestartWfbCommand executed");
         // Access the CanConnect property from the MainWindowViewModel instance
         //_canConnect = mainWindowViewModel.CanConnect;
         // Get the current values from the controls
@@ -481,10 +481,10 @@ public class WfbSettingsTabViewModel : ReactiveObject
         
         WfbConfContent = updatedWfbConfContent;
 
-        Logger.Instance.Log($"Uploading new : {OpenIPC.WFB_CONF_FILE_LOC}");
+        Logger.Instance().Log($"Uploading new : {OpenIPC.WFB_CONF_FILE_LOC}");
         _sshClientService.UploadFileAsync(_deviceConfig, OpenIPC.WFB_CONF_FILE_LOC, WfbConfContent);
 
-        Logger.Instance.Log($"Restarting Wfb"); 
+        Logger.Instance().Log($"Restarting Wfb"); 
         _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.WfbRestartCommand);
     
         

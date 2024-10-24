@@ -35,13 +35,13 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _canConnect, value);
-            Logger.Instance.Log($"CanConnect {value}");
+            Logger.Instance().Log($"CanConnect {value}");
         }
     }
     
     private async void RestartMajestic(MainWindowViewModel mainWindowViewModel)
     {
-        Logger.Instance.Log("*** TODO : RestartMajesticCommand executed");
+        Logger.Instance().Log("*** TODO : RestartMajesticCommand executed");
 
         await SaveRestartMajesticCommand();
     }
@@ -67,7 +67,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedResolution, value);
-            Logger.Instance.Log($"SelectedResolution updated to {value}");
+            Logger.Instance().Log($"SelectedResolution updated to {value}");
             UpdateYamlConfig(Majestic.VideoSize, value.ToString());
         }
     }
@@ -79,7 +79,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFps, value);
-            Logger.Instance.Log($"SelectedFps updated to {value}");
+            Logger.Instance().Log($"SelectedFps updated to {value}");
             UpdateYamlConfig(Majestic.VideoFps, value.ToString());
         }
     }
@@ -91,7 +91,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedCodec, value);
-            Logger.Instance.Log($"SelectedCodec updated to {value}");
+            Logger.Instance().Log($"SelectedCodec updated to {value}");
             UpdateYamlConfig(Majestic.VideoCodec, value.ToString());
         }
     }
@@ -103,7 +103,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedBitrate, value);
-            Logger.Instance.Log($"SelectedBitrate updated to {value}");
+            Logger.Instance().Log($"SelectedBitrate updated to {value}");
             UpdateYamlConfig(Majestic.VideoBitrate, value.ToString());
         }
     }
@@ -115,7 +115,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedExposure, value);
-            Logger.Instance.Log($"SelectedExposure updated to {value}");
+            Logger.Instance().Log($"SelectedExposure updated to {value}");
             UpdateYamlConfig(Majestic.IspExposure, value.ToString());
         }
     }
@@ -127,7 +127,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedHue, value);
-            Logger.Instance.Log($"SelectedHue updated to {value}");
+            Logger.Instance().Log($"SelectedHue updated to {value}");
             UpdateYamlConfig(Majestic.ImageHue, value.ToString());
         }
     }
@@ -139,7 +139,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedContrast, value);
-            Logger.Instance.Log($"SelectedContrast updated to {value}");
+            Logger.Instance().Log($"SelectedContrast updated to {value}");
             UpdateYamlConfig(Majestic.ImageContrast, value.ToString());
         }
     }
@@ -151,7 +151,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedSaturation, value);
-            Logger.Instance.Log($"SelectedSaturation updated to {value}");
+            Logger.Instance().Log($"SelectedSaturation updated to {value}");
             UpdateYamlConfig(Majestic.ImageSaturation, value.ToString());
         }
     }
@@ -163,7 +163,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedLuminance, value);
-            Logger.Instance.Log($"SelectedLuminance updated to {value}");
+            Logger.Instance().Log($"SelectedLuminance updated to {value}");
             UpdateYamlConfig(Majestic.ImageLuminance, value.ToString());
         }
     }
@@ -175,7 +175,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedFlip, value);
-            Logger.Instance.Log($"SelectedFlip updated to {value}");
+            Logger.Instance().Log($"SelectedFlip updated to {value}");
             UpdateYamlConfig(Majestic.ImageFlip, value.ToString());
         }
     }
@@ -187,7 +187,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         set
         {
             this.RaiseAndSetIfChanged(ref _selectedMirror, value);
-            Logger.Instance.Log($"SelectedMirror updated to {value}");
+            Logger.Instance().Log($"SelectedMirror updated to {value}");
             UpdateYamlConfig(Majestic.ImageMirror, value.ToString());
         }
     }
@@ -205,7 +205,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
         RestartMajesticCommand = new RelayCommand(() => RestartMajestic(_mainWindowViewModel));
         
         _deviceConfig = deviceConfig;
-        _sshClientService = new SshClientService();
+        _sshClientService = new SshClientService(_eventAggregator);
     }
 
     private void OnMajesticContentUpdated(MajesticContentUpdatedMessage message)
@@ -277,7 +277,8 @@ public class CameraSettingsTabViewModel : ViewModelBase
                 _yamlConfig.Add(fullKey, value);
             }
 
-            Logger.Instance.Log($"Found {fullKey}: {scalarNode.Value}");
+            Logger.Instance().Log($"Found {fullKey}: {scalarNode.Value}");
+            
 
             // Update UI properties based on the keys found
             switch (fullKey)
@@ -323,7 +324,7 @@ public class CameraSettingsTabViewModel : ViewModelBase
 
     public async Task SaveRestartMajesticCommand()
     {
-        Logger.Instance.Log("Preparing to Save Majestic file.");
+        Logger.Instance().Log("Preparing to Save Majestic file.");
         var majesticYamlContent = await _sshClientService.DownloadFileAsync(_deviceConfig, OpenIPC.MAJESTIC_FILE_LOC);
 
         try
@@ -353,11 +354,11 @@ public class CameraSettingsTabViewModel : ViewModelBase
             await Task.Delay(5000);
             await _sshClientService.ExecuteCommandAsync(_deviceConfig, DeviceCommands.MajesticStartCommand);
 
-            Logger.Instance.Log("YAML file saved and majestic service restarted successfully.");
+            Logger.Instance().Log("YAML file saved and majestic service restarted successfully.");
         }
         catch (Exception ex)
         {
-            Logger.Instance.Log($"Failed to save YAML file: {ex.Message}");
+            Logger.Instance().Log($"Failed to save YAML file: {ex.Message}");
         }
     }
 

@@ -11,6 +11,7 @@
   
      <Application.Resources>
          <local:DeviceTypeConverter x:Key="DeviceTypeConverter"/>
+         
      </Application.Resources>
              
     <Application.Styles>

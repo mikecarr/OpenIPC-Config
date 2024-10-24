@@ -1,5 +1,7 @@
 using Avalonia.Threading;
+using OpenIPC_Config.Messages;
 using OpenIPC_Config.ViewModels;
+using Prism.Events;
 
 namespace OpenIPC_Config;
 
@@ -14,7 +16,7 @@ public class Logger
     private readonly string _logFilePath;
     private TextBox _logsTextBox; // Reference to the logs TextBox for displaying messages
     private ScrollViewer _scrollViewer; // Reference to the ScrollViewer for scrolling
-
+    
     // Private constructor to prevent instantiation
     private Logger()
     {
@@ -23,7 +25,7 @@ public class Logger
     }
 
     // Singleton instance
-    public static Logger Instance => _instance ??= new Logger();
+    public static Logger Instance() => _instance ??= new Logger();
 
     // Method to initialize the log file
     private void InitializeLogFile()
@@ -48,9 +50,9 @@ public class Logger
 
         // Log to console
         Console.WriteLine(formattedMessage);
+
+        Message logMessage = new Message(formattedMessage);
         
-        // Notify the ViewModel (if you can access it)
-        //MainWindowViewModel.Instance?.(formattedMessage); // Ensure you have a way to access the ViewModel
     }
 
     

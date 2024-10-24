@@ -7,6 +7,11 @@
              mc:Ignorable="d"
              x:DataType="vm:SetupTabViewModel">
     
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/Styles.axaml" />
+    </UserControl.Styles>
+
+    
     <!-- Main Content -->
     <Grid Margin="10">
         <Grid.ColumnDefinitions>

@@ -10,6 +10,7 @@ public partial class MessageView : UserControl
     public MessageView()
     {
         InitializeComponent();
-        //DataContext = ViewModelLocator.Instance.MessageViewModel;
+        DataContext = new MessageViewModel();
+
     }
 }
